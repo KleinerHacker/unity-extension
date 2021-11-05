@@ -1,5 +1,5 @@
 {
-  "name": "org.pcsoft.unity.extension",
+  "name": "org.pcsoft.extension",
   "version": "1.0.0",
   "displayName": "Unity Extension",
   "description": "Extension for Unity itself.",
