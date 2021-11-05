@@ -9,6 +9,11 @@ Insert this repository directly to Unity.
 * https://github.com/KleinerHacker/unity-animation
 * https://github.com/KleinerHacker/unity-editor-ex
 
+### Open UPM
+URL: https://package.openupm.com
+
+Scope: org.pcsoft
+
 # usage
 
 ### Extension Methods
