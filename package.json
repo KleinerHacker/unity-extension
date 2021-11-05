@@ -1,0 +1,17 @@
+{
+  "name": "org.pcsoft.unity.extension",
+  "version": "1.0.0",
+  "displayName": "Unity Extension",
+  "description": "Extension for Unity itself.",
+  "unity": "2021.1",
+  "keywords": [
+    "Unity",
+    "extension",
+    "tooling"
+  ],
+  "author": {
+    "name": "Pfeiffer C Soft",
+    "email": "kl3in3rhack3r@gmail.com",
+    "url": "https://github.com/KleinerHacker/unity-extension"
+  }
+}
