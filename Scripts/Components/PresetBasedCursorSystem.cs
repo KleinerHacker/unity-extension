@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
-using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
+using UnityExtension.Runtime.extension.Scripts.Assets;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
+namespace UnityExtension.Runtime.extension.Scripts.Components
 {
     public abstract class PresetBasedCursorSystem<T, TDefault, TDefaultEnum, TSpecific, TSpecificEnum> : CursorSystem<TDefault, TSpecific>
         where T : CursorPreset<TDefault, TDefaultEnum, TSpecific, TSpecificEnum>

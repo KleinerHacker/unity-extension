@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
+using UnityExtension.Runtime.extension.Scripts.Assets;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
+namespace UnityExtension.Runtime.extension.Scripts.Components
 {
     public abstract class CursorSystem<TDefault, TSpecific> : MonoBehaviour
         where TSpecific : CursorItem where TDefault : CursorItem

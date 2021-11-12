@@ -5,7 +5,7 @@ using UnityEditorEx.Runtime.editor_ex.Scripts._00_Runtime.Types;
 using UnityEditorEx.Runtime.editor_ex.Scripts._00_Runtime.Utils;
 using UnityEngine;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
+namespace UnityExtension.Runtime.extension.Scripts.Assets
 {
     public abstract class CursorPreset<TDefault, TDefaultEnum, TSpecific, TSpecificEnum>
         where TDefault : CursorItem<TDefaultEnum>

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Utils.Extensions
+namespace UnityExtension.Runtime.extension.Scripts.Utils.Extensions
 {
     public static class GameObjectExtensions
     {
@@ -21,6 +21,14 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Utils.Extensions
             foreach (var o in list)
             {
                 GameObject.Destroy(o);
+            }
+        }
+        
+        public static void SetActive(this IEnumerable<GameObject> list, bool active)
+        {
+            foreach (var go in list)
+            {
+                go.SetActive(active);
             }
         }
     }

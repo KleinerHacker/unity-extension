@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
+namespace UnityExtension.Runtime.extension.Scripts.Components
 {
     [AddComponentMenu(UnityExtensionConstants.Root + "/NavMesh Updater")]
     [DisallowMultipleComponent]

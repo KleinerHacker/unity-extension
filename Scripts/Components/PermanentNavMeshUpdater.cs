@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
+namespace UnityExtension.Runtime.extension.Scripts.Components
 {
     [AddComponentMenu(UnityExtensionConstants.Root + "/Permanent NavMesh Updater")]
     [DisallowMultipleComponent]

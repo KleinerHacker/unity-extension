@@ -1,12 +1,24 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
+namespace UnityExtension.Runtime.extension.Scripts.Components
 {
-    [AddComponentMenu(UnityExtensionConstants.Root + "/Unity Dispatcher")]
-    public sealed class UnityDispatcher : ObserverSingletonBehavior<UnityDispatcher>
+    internal sealed class UnityDispatcherController : ObserverSingletonBehavior<UnityDispatcherController>
     {
+        #region Static Area
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        private static void CreateDispatcher()
+        {
+            var gameObject = new GameObject("Dispatcher");
+            gameObject.AddComponent<UnityDispatcherController>();
+            DontDestroyOnLoad(gameObject);
+        }
+
+        #endregion
+        
         private readonly IList<Action> _runList = new List<Action>();
 
         public void RunLater(Action action)

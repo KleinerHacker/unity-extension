@@ -3,7 +3,7 @@ using UnityAnimation.Runtime.animation.Scripts.Types;
 using UnityAnimation.Runtime.animation.Scripts.Utils;
 using UnityEngine;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Utils
+namespace UnityExtension.Runtime.extension.Scripts.Utils
 {
     public static class GameTimeController
     {
