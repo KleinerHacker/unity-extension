@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
-namespace UnityExtension.Runtime.extension.Scripts.Components
+namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 {
     internal sealed class UnityDispatcherController : ObserverSingletonBehavior<UnityDispatcherController>
     {

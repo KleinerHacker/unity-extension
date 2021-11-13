@@ -1,9 +1,9 @@
 using System;
-using UnityAnimation.Runtime.animation.Scripts.Types;
-using UnityAnimation.Runtime.animation.Scripts.Utils;
+using UnityAnimation.Runtime.animation.Scripts.Runtime.Types;
+using UnityAnimation.Runtime.animation.Scripts.Runtime.Utils;
 using UnityEngine;
 
-namespace UnityExtension.Runtime.extension.Scripts.Utils
+namespace UnityExtension.Runtime.extension.Scripts.Runtime.Utils
 {
     public static class GameTimeController
     {

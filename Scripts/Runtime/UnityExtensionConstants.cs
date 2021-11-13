@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UnityExtension.Runtime.extension.Scripts
+namespace UnityExtension.Runtime.extension.Scripts.Runtime
 {
     internal sealed class UnityExtensionConstants : MonoBehaviour
     {

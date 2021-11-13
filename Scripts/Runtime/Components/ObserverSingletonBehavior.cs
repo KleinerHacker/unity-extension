@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace UnityExtension.Runtime.extension.Scripts.Components
+namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 {
     public abstract class ObserverSingletonBehavior<T> : MonoBehaviour where T : ObserverSingletonBehavior<T>
     {

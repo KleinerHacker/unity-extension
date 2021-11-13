@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
 using Unity.Collections;
-using UnityEditorEx.Runtime.editor_ex.Scripts._00_Runtime.Types;
-using UnityEditorEx.Runtime.editor_ex.Scripts._00_Runtime.Utils;
+using UnityEditorEx.Runtime.editor_ex.Scripts.Runtime.Types;
+using UnityEditorEx.Runtime.editor_ex.Scripts.Runtime.Utils;
 using UnityEngine;
 
-namespace UnityExtension.Runtime.extension.Scripts.Assets
+namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
 {
     public abstract class CursorPreset<TDefault, TDefaultEnum, TSpecific, TSpecificEnum>
         where TDefault : CursorItem<TDefaultEnum>

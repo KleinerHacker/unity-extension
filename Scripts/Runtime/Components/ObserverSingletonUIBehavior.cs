@@ -1,6 +1,6 @@
 using UnityEngine.EventSystems;
 
-namespace UnityExtension.Runtime.extension.Scripts.Components
+namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 {
     public abstract class ObserverSingletonUIBehavior<T> : UIBehaviour where T : ObserverSingletonUIBehavior<T>
     {

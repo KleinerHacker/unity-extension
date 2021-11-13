@@ -1,7 +1,7 @@
 using System;
-using UnityExtension.Runtime.extension.Scripts.Components;
+using UnityExtension.Runtime.extension.Scripts.Runtime.Components;
 
-namespace UnityExtension.Runtime.extension.Scripts.Utils
+namespace UnityExtension.Runtime.extension.Scripts.Runtime.Utils
 {
     public static class UnityDispatcher
     {
