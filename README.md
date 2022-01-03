@@ -19,6 +19,7 @@ Scope: org.pcsoft
 ### Extension Methods
 * Instantiate or Destroy all game objects of a list
 * Async Operation extensions to check state easier
+* Effect Item extension methods to run effects directly
 
 ### Components
 * `CurorSystem` for using multiple cursors (see `CursorPreset` Asset)
@@ -31,3 +32,8 @@ Scope: org.pcsoft
 ### Utilities
 * `GameTimeController` to control game time in an easier way
   * Can differ between "Game Pause" and play time of 0
+
+### Basics for assets
+* `IdentifiableAsset` base class with auto-GUID
+* `EffectItem` for effect setup in assets
+* `PrefabItem` for prefab setup in assets
