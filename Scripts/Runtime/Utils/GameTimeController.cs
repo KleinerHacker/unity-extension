@@ -94,7 +94,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Utils
 
         public static void Resume(MonoBehaviour mb, float speed = 1f, Action finished = null)
         {
-            Pause(mb, AnimationCurve.Linear(0f, 0f, 1f, 1f), speed, finished);
+            Resume(mb, AnimationCurve.Linear(0f, 0f, 1f, 1f), speed, finished);
         }
 
         public static void Resume(MonoBehaviour mb, AnimationCurve curve, float speed = 1f, Action finished = null)
