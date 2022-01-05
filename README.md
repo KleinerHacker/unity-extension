@@ -22,7 +22,7 @@ Scope: org.pcsoft
 * Effect Item extension methods to run effects directly
 
 ### Components
-* `CurorSystem` for using multiple cursors (see `CursorPreset` Asset)
+* `CurorSystem` for using multiple cursors (see Project Settings)
 * Single behaviors for singleton pattern in two ways:
   * `ObserverSingleton[UI]Behavior` store its instance on `OnEnabled`
   * `SearchingSingleton[UI]Behavior` get its instance directly from scene
