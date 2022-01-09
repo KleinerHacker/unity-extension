@@ -1,4 +1,7 @@
 using System;
+#if !UNITY_EDITOR
+using UnityAssetLoader.Runtime.asset_loader.Scripts.Runtime.Loader;
+#endif
 using UnityEditor;
 using UnityEngine;
 
