@@ -1,0 +1,35 @@
+#if DEMO
+using System;
+using UnityEngine;
+using UnityExtension.Runtime.extension.Scripts.Runtime;
+
+namespace UnityExtension.Demo.extension.Scripts.Demo
+{
+    [RequireComponent(typeof(Renderer))]
+    public sealed class Raycaster1Receiver : MonoBehaviour
+    {
+        private Renderer _renderer;
+
+        private void Awake()
+        {
+            _renderer = GetComponent<Renderer>();
+        }
+
+        private void OnEnable()
+        {
+            Raycaster.AddRaycastReceiver("ray1", OnRay1);
+        }
+
+        private void OnDisable()
+        {
+            Raycaster.RemoveRaycastReceiver("ray1", OnRay1);
+        }
+
+        private void OnRay1(object sender, RaycasterEventArgs e)
+        {
+            Debug.Log("OnRay1: " + e.Hit.HasValue);
+            _renderer.material.color = e.Hit.HasValue ? Color.yellow : Color.white;
+        }
+    }
+}
+#endif

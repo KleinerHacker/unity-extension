@@ -23,9 +23,10 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
                 var settings = AssetDatabase.LoadAssetAtPath<CursorSettings>(Path);
                 if (settings == null)
                 {
-                    Debug.Log("Unable to find game settings, create new");
+                    Debug.Log("Unable to find cursor settings, create new");
 
                     settings = new CursorSettings();
+                    AssetDatabase.CreateFolder("Assets", "Resources");
                     AssetDatabase.CreateAsset(settings, Path);
                     AssetDatabase.SaveAssets();
                     AssetDatabase.Refresh();
