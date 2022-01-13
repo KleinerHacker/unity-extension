@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -11,7 +10,7 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
         #region Static Area
 
         [SettingsProvider]
-        public static SettingsProvider CreateCursorSettingsProvider()
+        public static SettingsProvider CreateSettingsProvider()
         {
             return new CursorProvider();
         }
