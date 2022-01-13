@@ -28,6 +28,10 @@ Scope: org.pcsoft
   * `SearchingSingleton[UI]Behavior` get its instance directly from scene
 * `SceneQuality` to handle quality in an easy way
 * `UnityDispatcher` to run code on Unity render thread
+* `Raycaster` to insert a simple raycast system for pointer
+  * Add `Raycaster` to the main camera as component
+  * Use `Raycaster` class to add or remove listener
+  * Setup raycasts in project settings (Project/Physics/Raycast)
 
 ### Utilities
 * `GameTimeController` to control game time in an easier way
