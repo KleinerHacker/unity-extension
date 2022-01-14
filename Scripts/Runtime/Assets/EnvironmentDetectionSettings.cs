@@ -67,6 +67,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
 
         #region Builtin Methods
 
+#if UNITY_EDITOR
         private void OnValidate()
         {
             foreach (var item in items)
@@ -77,6 +78,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
                 }
             }
         }
+#endif
 
         #endregion
     }
