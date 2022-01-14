@@ -32,6 +32,8 @@ Scope: org.pcsoft
   * Add `Raycaster` to the main camera as component
   * Use `Raycaster` class to add or remove listener
   * Setup raycasts in project settings (Project/Physics/Raycast)
+* `RuntimeEnvironment` to check current environment for specific conditions, see project settings 'Project/Player/Environment'
+  * For example to detect specific input on specific plattforms (if platform is Android and TV and a keyboard exists, handle keyboard input)
 
 ### Utilities
 * `GameTimeController` to control game time in an easier way
