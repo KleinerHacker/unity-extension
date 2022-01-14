@@ -21,6 +21,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
             {
                 var guid = EnvironmentDetectionSettings.Singleton.Items.FirstOrDefault(x =>
                 {
+                    Debug.Log("[ENV] Check: " + x.Name);
                     var inputsAvailable = x.Inputs.All(y =>
                     {
                         var type = Type.GetType(y);
@@ -32,7 +33,10 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
                             throw new InvalidOperationException("Property (static) 'current' is unknown");
 
                         var value = (InputDevice)propertyInfo.GetValue(null);
-                        return value != null && value.deviceId != InputDevice.InvalidDeviceId && value.enabled;
+                        var available = value != null && value.deviceId != InputDevice.InvalidDeviceId && value.enabled;
+                        
+                        Debug.Log("[ENV] Input: " + x.Name + ", available: " + available);
+                        return available;
                     });
                     if (!inputsAvailable)
                         return false;
@@ -40,18 +44,28 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
                     var runtimeSystemAvailable = x.RuntimeSystemItems.Any(y =>
                     {
                         if (Application.platform != y.Platform)
+                        {
+                            Debug.Log("[ENV] Platform: " + x.Name + ", wrong: " + y.Platform);
                             return false;
+                        }
 
 #if PLATFORM_ANDROID
-                    if (!AndroidUtils.IsOnTV)
+                    if (!AndroidUtils.IsOnTV) {
+                        Debug.Log("[ENV] On TV: " + x.Name + ", wrong");
                         return false;
+                    }
 #endif
 
+                        Debug.Log("[ENV] Platform: " + x.Name + ", success");
                         return true;
                     });
                     if (!runtimeSystemAvailable)
+                    {
+                        Debug.Log("[ENV] Check: " + x.Name + ", failed");
                         return false;
+                    }
 
+                    Debug.Log("[ENV] Check: " + x.Name + ", success");
                     return true;
                 })?.Guid;
 
@@ -65,6 +79,8 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
                 }
 
                 _initialized = true;
+                
+                Debug.Log("[ENV] Found guid: " + guid);
             }
 
             return _guid;
