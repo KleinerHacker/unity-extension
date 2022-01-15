@@ -17,12 +17,12 @@ namespace UnityExtension.Demo.extension.Scripts.Demo
 
         private void OnEnable()
         {
-            Raycaster.AddRaycastReceiver("ray2", OnRay2);
+            Raycaster.AddRaycastChanged("ray2", OnRay2);
         }
 
         private void OnDisable()
         {
-            Raycaster.RemoveRaycastReceiver("ray2", OnRay2);
+            Raycaster.RemoveRaycastChanged("ray2", OnRay2);
         }
 
         private void OnRay2(object sender, RaycasterEventArgs e)

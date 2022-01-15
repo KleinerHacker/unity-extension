@@ -6,52 +6,94 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 {
     public static class Raycaster
     {
-        private static readonly IDictionary<string, EventHandler<RaycasterEventArgs>> EventHandlers = new Dictionary<string, EventHandler<RaycasterEventArgs>>();
+        private static readonly IDictionary<string, EventHandler<RaycasterEventArgs>> RaycastChangedDict = new Dictionary<string, EventHandler<RaycasterEventArgs>>();
+        private static readonly IDictionary<string, EventHandler<RaycasterEventArgs>> RaycastDict = new Dictionary<string, EventHandler<RaycasterEventArgs>>();
 
         #region Events
 
-        private static event EventHandler<RaycasterEventArgs> OnRaycastReceived;
+        private static event EventHandler<RaycasterEventArgs> OnRaycastChanged;
+        private static event EventHandler<RaycasterEventArgs> OnRaycast;
 
         #endregion
 
-        public static void AddRaycastReceiver(EventHandler<RaycasterEventArgs> e)
+        public static void AddRaycastChanged(EventHandler<RaycasterEventArgs> e)
         {
-            OnRaycastReceived += e;
+            OnRaycastChanged += e;
         }
 
-        public static void RemoveRaycastReceiver(EventHandler<RaycasterEventArgs> e)
+        public static void RemoveRaycastChanged(EventHandler<RaycasterEventArgs> e)
         {
-            OnRaycastReceived -= e;
+            OnRaycastChanged -= e;
         }
 
-        public static void AddRaycastReceiver(string key, EventHandler<RaycasterEventArgs> e)
+        public static void AddRaycastChanged(string key, EventHandler<RaycasterEventArgs> e)
         {
-            if (!EventHandlers.ContainsKey(key))
+            if (!RaycastChangedDict.ContainsKey(key))
             {
-                EventHandlers.Add(key, e);
+                RaycastChangedDict.Add(key, e);
             }
             else
             {
-                EventHandlers[key] += e;
+                RaycastChangedDict[key] += e;
             }
         }
 
-        public static void RemoveRaycastReceiver(string key, EventHandler<RaycasterEventArgs> e)
+        public static void RemoveRaycastChanged(string key, EventHandler<RaycasterEventArgs> e)
         {
-            if (!EventHandlers.ContainsKey(key))
+            if (!RaycastChangedDict.ContainsKey(key))
                 return;
 
-            EventHandlers[key] -= e;
+            RaycastChangedDict[key] -= e;
+        }
+        
+        public static void AddRaycast(EventHandler<RaycasterEventArgs> e)
+        {
+            OnRaycast += e;
         }
 
-        internal static void RaiseRaycast(object sender, string key, RaycastHit? hit)
+        public static void RemoveRaycast(EventHandler<RaycasterEventArgs> e)
         {
-            if (EventHandlers.ContainsKey(key))
+            OnRaycast -= e;
+        }
+
+        public static void AddRaycast(string key, EventHandler<RaycasterEventArgs> e)
+        {
+            if (!RaycastDict.ContainsKey(key))
             {
-                EventHandlers[key].Invoke(sender, new RaycasterEventArgs(key, hit));
+                RaycastDict.Add(key, e);
+            }
+            else
+            {
+                RaycastDict[key] += e;
+            }
+        }
+
+        public static void RemoveRaycast(string key, EventHandler<RaycasterEventArgs> e)
+        {
+            if (!RaycastDict.ContainsKey(key))
+                return;
+
+            RaycastDict[key] -= e;
+        }
+
+        internal static void RaiseRaycastChanged(object sender, string key, RaycastHit? hit)
+        {
+            if (RaycastChangedDict.ContainsKey(key))
+            {
+                RaycastChangedDict[key].Invoke(sender, new RaycasterEventArgs(key, hit));
             }
 
-            OnRaycastReceived?.Invoke(sender, new RaycasterEventArgs(key, hit));
+            OnRaycastChanged?.Invoke(sender, new RaycasterEventArgs(key, hit));
+        }
+        
+        internal static void RaiseRaycast(object sender, string key, RaycastHit? hit)
+        {
+            if (RaycastDict.ContainsKey(key))
+            {
+                RaycastDict[key].Invoke(sender, new RaycasterEventArgs(key, hit));
+            }
+
+            OnRaycast?.Invoke(sender, new RaycasterEventArgs(key, hit));
         }
     }
 

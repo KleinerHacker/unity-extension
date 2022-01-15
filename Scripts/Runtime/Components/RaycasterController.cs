@@ -73,16 +73,18 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
                 if (!instance.HasHit)
                 {
                     instance.HasHit = true;
-                    Raycaster.RaiseRaycast(this, instance.Item.Key, hit);
+                    Raycaster.RaiseRaycastChanged(this, instance.Item.Key, hit);
                 }
+                Raycaster.RaiseRaycast(this, instance.Item.Key, hit);
             }
             else
             {
                 if (instance.HasHit)
                 {
                     instance.HasHit = false;
-                    Raycaster.RaiseRaycast(this, instance.Item.Key, null);
+                    Raycaster.RaiseRaycastChanged(this, instance.Item.Key, null);
                 }
+                Raycaster.RaiseRaycast(this, instance.Item.Key, null);
             }
         }
 
