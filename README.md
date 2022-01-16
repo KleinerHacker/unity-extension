@@ -43,3 +43,6 @@ Scope: org.pcsoft
 * `IdentifiableAsset` base class with auto-GUID
 * `EffectItem` for effect setup in assets
 * `PrefabItem` for prefab setup in assets
+
+### Debug System (Development Build only)
+* Framerate Displayer, see project settings
