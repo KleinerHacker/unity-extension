@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.PackageManager.UI;
@@ -20,7 +21,7 @@ namespace UnityExtension.Editor.extension.Scripts.Editor
         
         public VisualElement CreateExtensionUI()
         {
-            var template = EditorGUIUtility.Load("Assets/extension/Scripts/Editor/DependencyPackageView.uxml") as VisualTreeAsset;
+            var template = EditorGUIUtility.Load(AssetDatabase.GUIDToAssetPath("acb9f625d137110439c22a4b49247c7c")) as VisualTreeAsset;
             var element = template.CloneTree();
 
             _label = element.Query<Label>("lblDependencies").First();

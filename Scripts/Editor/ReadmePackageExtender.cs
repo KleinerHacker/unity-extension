@@ -30,7 +30,7 @@ namespace UnityExtension.Editor.extension.Scripts.Editor
 
         public VisualElement CreateExtensionUI()
         {
-            var template = EditorGUIUtility.Load("Assets/extension/Scripts/Editor/ReadmePackageView.uxml") as VisualTreeAsset;
+            var template = EditorGUIUtility.Load(AssetDatabase.GUIDToAssetPath("813a751f9510ef74fb25322cceadfa39")) as VisualTreeAsset;
             var element = template.CloneTree();
 
             _label = element.Query<Label>("lblReadme").First();
