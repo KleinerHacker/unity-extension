@@ -30,7 +30,14 @@ namespace UnityExtension.Editor.extension.Scripts.Editor
 
         public void OnPackageSelectionChange(PackageInfo packageInfo)
         {
-            _label.text = packageInfo.dependencies == null ? "" : string.Join(Environment.NewLine, packageInfo.dependencies.Select(x => x.name));
+            if (packageInfo == null)
+            {
+                _label.text = "<no package info>";
+            }
+            else
+            {
+                _label.text = packageInfo.dependencies == null ? "" : string.Join(Environment.NewLine, packageInfo.dependencies.Select(x => x.name));
+            }
         }
 
         public void OnPackageAddedOrUpdated(PackageInfo packageInfo)

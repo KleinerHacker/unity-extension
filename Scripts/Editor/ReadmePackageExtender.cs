@@ -41,13 +41,19 @@ namespace UnityExtension.Editor.extension.Scripts.Editor
 
         public void OnPackageSelectionChange(PackageInfo packageInfo)
         {
+            _readme.Clear();
+            if (packageInfo == null)
+            {
+                _label.text = "<no package info>";
+                return;
+            }
+
             if (packageInfo.source != PackageSource.Registry || !string.Equals(packageInfo.registry.url, "https://package.openupm.com", StringComparison.OrdinalIgnoreCase))
             {
                 _label.text = "";
                 return;
             }
 
-            _readme.Clear();
             _label.text = "Loading...";
             EditorCoroutineUtility.StartCoroutine(LoadReadme(packageInfo), this);
         }
@@ -99,14 +105,14 @@ namespace UnityExtension.Editor.extension.Scripts.Editor
                     if (request.result != UnityWebRequest.Result.Success)
                     {
                         Debug.LogWarning("Unable to load image: " + request.result + " / " + request.error + "; replace with text " + match.Groups[1].Value);
-                        
+
                         var label = new Label(match.Groups[1].Value);
                         _readme.Add(label);
                     }
                     else
                     {
                         var data = request.downloadHandler.data;
-                        
+
                         var texture2D = new Texture2D(1, 1, GraphicsFormat.R8G8B8A8_UNorm, TextureCreationFlags.None);
                         texture2D.LoadImage(data);
 
@@ -119,7 +125,7 @@ namespace UnityExtension.Editor.extension.Scripts.Editor
                         };
                         var style = image.style;
                         style.position = Position.Relative;
-                        style.width = width; 
+                        style.width = width;
                         style.height = height;
                         _readme.Add(image);
                     }
@@ -146,7 +152,7 @@ namespace UnityExtension.Editor.extension.Scripts.Editor
                     {
                         label.text = line;
                     }
-                    
+
                     _readme.Add(label);
                 }
             }
