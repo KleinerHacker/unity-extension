@@ -1,13 +1,11 @@
 using System;
-using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.PackageManager.UI;
-using UnityEngine;
 using UnityEngine.UIElements;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
-namespace UnityExtension.Editor.extension.Scripts.Editor
+namespace UnityExtension.Editor.extension.Scripts.Editor.PackageManager
 {
     public sealed class DependencyPackageExtender : IPackageManagerExtension
     {

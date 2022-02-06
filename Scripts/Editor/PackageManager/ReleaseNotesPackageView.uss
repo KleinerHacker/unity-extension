@@ -1,0 +1,22 @@
+.header {
+    font-size: 18px;
+    -unity-font-style: bold;
+    color: rgb(68, 138, 255);
+}
+
+.head1 {
+    font-size: 14px;
+    -unity-font-style: bold;
+    color: rgb(68, 138, 255);
+}
+
+.head2 {
+    font-size: 12px;
+    -unity-font-style: bold;
+    color: rgb(68, 138, 255);
+}
+
+.head3 {
+    font-size: 12px;
+    -unity-font-style: bold;
+}
