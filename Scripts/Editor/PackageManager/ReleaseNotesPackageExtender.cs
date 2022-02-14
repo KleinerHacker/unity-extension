@@ -18,11 +18,11 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.PackageManager
     {
         private static readonly IDictionary<string, (string version, string notes)> Cache = new Dictionary<string, (string version, string notes)>();
 
-        [InitializeOnLoadMethod]
+        /*[InitializeOnLoadMethod]
         public static void Init()
         {
             PackageManagerExtensions.RegisterExtension(new ReleaseNotesPackageExtender());
-        }
+        } */
 
         private Label _label;
         private VisualElement _releaseNotes;
