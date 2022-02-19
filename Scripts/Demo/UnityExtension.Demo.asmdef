@@ -1,9 +1,7 @@
 {
     "name": "UnityExtension.Demo",
     "rootNamespace": "UnityExtension.Demo",
-    "references": [
-        "GUID:7e0e70507eb6bf44e9f9fd2a3026ac35"
-    ],
+    "references": ["GUID:7e0e70507eb6bf44e9f9fd2a3026ac35"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
