@@ -23,9 +23,7 @@ Scope: org.pcsoft
 
 ### Components
 * `CurorSystem` for using multiple cursors (see Project Settings)
-* Single behaviors for singleton pattern in two ways:
-  * `ObserverSingleton[UI]Behavior` store its instance on `OnEnabled`
-  * `SearchingSingleton[UI]Behavior` get its instance directly from scene
+* Single behaviors for singleton pattern, see below
 * `SceneQuality` to handle quality in an easy way
 * `UnityDispatcher` to run code on Unity render thread
 * `Raycaster` to insert a simple raycast system for pointer
@@ -34,6 +32,30 @@ Scope: org.pcsoft
   * Setup raycasts in project settings (Project/Physics/Raycast)
 * `RuntimeEnvironment` to check current environment for specific conditions, see project settings 'Project/Player/Environment'
   * For example to detect specific input on specific plattforms (if platform is Android and TV and a keyboard exists, handle keyboard input)
+
+### Singleton
+There are two singleton pattern classes: 
+* For `MonoBehavior`
+* For `UIBehavior`
+
+There are multiple variants to use this singleton. So you can use different scopes and different creation or usage strategies.
+
+Example:
+
+```CSharp
+[Singleton(Scope = SingletonScope.Application, Instance = SingletonInstance.RequiresNewInstance, CreationTime = SingletonCreationTime.Loading)]
+public class MyBehavior : SingletonBehavior<MyBehavior> {
+
+  //Optional initializer for created singleton instance
+  [SingletonInitializer] 
+  public static void InitializeSingleton(MyBehavior instance) {
+    //...
+  }
+
+  //...
+
+}
+```
 
 ### Utilities
 * `GameTimeController` to control game time in an easier way
