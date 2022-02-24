@@ -3,24 +3,13 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
+using UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 {
-    public sealed class CursorController : SearchingSingletonBehavior<CursorController>
+    [Singleton(Scope = SingletonScope.Application, Instance = SingletonInstance.RequiresNewInstance, CreationTime = SingletonCreationTime.Loading)]
+    public sealed class CursorController : SingletonBehavior<CursorController>
     {
-        #region Static Area
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        public static void LoadCursorSystem()
-        {
-            Debug.Log("Initialize cursor system");
-            var go = new GameObject("Cursor System");
-            go.AddComponent<CursorController>();
-            DontDestroyOnLoad(go);
-        }
-
-        #endregion
-
         #region Properties
         
         private CursorState _cursorState = CursorState.Default;

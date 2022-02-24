@@ -1,37 +1,27 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton
 {
     /// <summary>
     /// Base class for a singleton behavior.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Must the final implementation type of itself</typeparam>
     public abstract class SingletonBehavior<T> : MonoBehaviour where T : SingletonBehavior<T>
     {
-        private static readonly SingletonRegistry<T> Registry = new SingletonRegistry<T>();
-
-        public static T Singleton => Registry.Singleton;
-
-        /// <summary>
-        /// Add callback to handle instance creation actions
-        /// </summary>
-        protected static Action<T> PostInstantiationCallback
-        {
-            get => Registry.PostInstantiationCallback;
-            set => Registry.PostInstantiationCallback = value;
-        }
+        public static T Singleton => SingletonHandler.Registry.GetSingleton<T>();
 
         #region Builtin Methods
 
         protected void Awake()
         {
-            var attribute = Registry.Attribute;
+            var attribute = SingletonHandler.Registry.GetAttribute(GetType());
             
-            Debug.Log("[SINGLETON] Try add instance to Singleton registry for " + typeof(T).FullName);
-            if (!Registry.TryRegisterSingleton((T)this))
+            Debug.Log("[SINGLETON] Try add instance to Singleton registry for " + GetType().FullName);
+            if (!SingletonHandler.Registry.TryRegisterSingleton(this))
             {
-                Debug.Log("[SINGLETON] Instance already in Singleton registry for " + typeof(T).FullName + ", destroy this instance");
+                Debug.Log("[SINGLETON] Instance already in Singleton registry for " + GetType().FullName + ", destroy this instance");
 
                 Destroy(this);
                 return;
@@ -50,16 +40,16 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton
 
         protected void OnDestroy()
         {
-            var attribute = Registry.Attribute;
+            var attribute = SingletonHandler.Registry.GetAttribute(GetType());
             
             if (attribute.Scope == SingletonScope.Application)
             {
-                Debug.Log("[SINGLETON] Singleton marked as application scoped, no cleanup for " + typeof(T).FullName);
+                Debug.Log("[SINGLETON] Singleton marked as application scoped, no cleanup for " + GetType().FullName);
                 return;
             }
 
             Debug.Log("[SINGLETON] Try Singleton registry cleanup for " + typeof(T).FullName);
-            Registry.TryUnregisterSingleton((T)this);
+            SingletonHandler.Registry.TryUnregisterSingleton(this);
             
             DoDestroy();
         }

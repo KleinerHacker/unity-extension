@@ -17,6 +17,11 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton
         /// Type of instance for this singleton
         /// </summary>
         public SingletonInstance Instance { get; set; } = SingletonInstance.HasExistingInstance;
+
+        /// <summary>
+        /// Defines time of creation
+        /// </summary>
+        public SingletonCreationTime CreationTime { get; set; } = SingletonCreationTime.Loading;
     }
 
     /// <summary>
@@ -47,5 +52,20 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton
         /// Singleton is not instantiated yet and must created new (a new game object will created)
         /// </summary>
         RequiresNewInstance
+    }
+
+    /// <summary>
+    /// Creation time of a singleton
+    /// </summary>
+    public enum SingletonCreationTime
+    {
+        /// <summary>
+        /// Create on scene / app loading
+        /// </summary>
+        Loading,
+        /// <summary>
+        /// Create on first singleton invocation
+        /// </summary>
+        FirstInvocation,
     }
 }

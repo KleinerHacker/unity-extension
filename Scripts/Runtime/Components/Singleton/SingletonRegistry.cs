@@ -1,102 +1,147 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton
 {
-    internal sealed class SingletonRegistry<T> where T : Component
+    internal sealed class SingletonRegistry
     {
-        private readonly IDictionary<Type, T> _singletonRegister = new Dictionary<Type, T>();
-        
-        public SingletonAttribute Attribute { get; }
-        public Action<T> PostInstantiationCallback { get; set; }
+        private readonly IDictionary<Type, InstanceInfo> _singletonRegister;
 
         public SingletonRegistry()
         {
-            Attribute = typeof(T).GetCustomAttribute<SingletonAttribute>();
-            if (Attribute == null)
-                throw new InvalidOperationException("Missing required annotation " + nameof(Components.Singleton.SingletonAttribute) + " on class " +
-                                                    typeof(T).FullName);
+            _singletonRegister = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(x => x.GetTypes())
+                .Where(x => x.GetCustomAttribute<SingletonAttribute>() != null)
+                .ToDictionary(x => x, x => new InstanceInfo(x.GetCustomAttribute<SingletonAttribute>()));
         }
 
-        public T Singleton
+        public SingletonAttribute GetAttribute<T>() where T : Component => GetAttribute(typeof(T));
+
+        public SingletonAttribute GetAttribute(Type type)
         {
-            get
+            CheckRegistry(type);
+            return _singletonRegister[type].Attribute;
+        }
+
+        public T GetSingleton<T>() where T : Component
+        {
+            return (T)GetSingleton(typeof(T));
+        }
+
+        public Component GetSingleton(Type type)
+        {
+            CheckRegistry(type);
+
+            var instanceInfo = _singletonRegister[type];
+            if (instanceInfo.Instance != null)
+                return instanceInfo.Instance;
+
+            if (instanceInfo.Attribute.Instance == SingletonInstance.HasExistingInstance)
+                throw new InvalidOperationException("Unable to find singleton in registry of type " + type.FullName);
+
+            var singleton = CreateSingleton(instanceInfo.Attribute, type);
+            Debug.Log("[SINGLETON] Add singleton to registry for " + type.FullName);
+            instanceInfo.Instance = singleton;
+
+            return singleton;
+        }
+
+        public bool TryRegisterSingleton(Component value)
+        {
+            CheckRegistry(value.GetType());
+
+            var instanceInfo = _singletonRegister[value.GetType()];
+            if (instanceInfo.Instance != null)
+                return false;
+
+            instanceInfo.Instance = value;
+            return true;
+        }
+
+        public bool TryUnregisterSingleton(Component value)
+        {
+            CheckRegistry(value.GetType());
+
+            var instanceInfo = _singletonRegister[value.GetType()];
+            if (instanceInfo.Instance == null)
+                return false;
+
+            instanceInfo.Instance = null;
+            return true;
+        }
+
+        public void VisitAllSingletons(Action<Type, SingletonAttribute> visitor)
+        {
+            foreach (var item in _singletonRegister)
             {
-                var type = typeof(T);
-
-                if (_singletonRegister.ContainsKey(type))
-                    return _singletonRegister[type];
-
-                if (Attribute.Instance == SingletonInstance.HasExistingInstance)
-                    throw new InvalidOperationException("Unable to find singleton in registry of type " + typeof(T).FullName);
-
-                var singleton = CreateSingleton();
-                Debug.Log("[SINGLETON] Add singleton to registry for " + typeof(T).FullName);
-                _singletonRegister.Add(type, singleton);
-
-                return singleton;
+                visitor.Invoke(item.Key, item.Value.Attribute);
             }
         }
 
-        public bool TryRegisterSingleton(T value)
+        private Component CreateSingleton(SingletonAttribute attribute, Type type)
         {
-            if (_singletonRegister.ContainsKey(value.GetType()))
-                return false;
-            
-            _singletonRegister.Add(value.GetType(), value);
-            return true;
-        }
+            Debug.Log("[SINGLETON] Create new singleton for " + type.FullName);
 
-        public bool TryUnregisterSingleton(T value)
-        {
-            if (!_singletonRegister.ContainsKey(value.GetType()))
-                return false;
-
-            _singletonRegister.Remove(value.GetType());
-            return true;
-        }
-
-        private T CreateSingleton()
-        {
-            Debug.Log("[SINGLETON] Create new singleton for " + typeof(T).FullName);
-
-            return Attribute.Scope switch
+            return attribute.Scope switch
             {
-                SingletonScope.Application => CreateInApplicationScope(),
-                SingletonScope.Scene => CreateInSceneScope(),
-                _ => throw new NotImplementedException(Attribute.Scope.ToString())
+                SingletonScope.Application => CreateInApplicationScope(type),
+                SingletonScope.Scene => CreateInSceneScope(type),
+                _ => throw new NotImplementedException(attribute.Scope.ToString())
             };
         }
 
-        private T CreateInApplicationScope()
+        private Component CreateInApplicationScope(Type type)
         {
-            Debug.Log("[SINGLETON] Singleton in application scope for " + typeof(T).FullName);
-            
-            var newInstance = CreateInstance();
+            Debug.Log("[SINGLETON] Singleton in application scope for " + type.FullName);
+
+            var newInstance = CreateInstance(type);
             Object.DontDestroyOnLoad(newInstance);
 
             return newInstance;
         }
 
-        private T CreateInSceneScope()
+        private Component CreateInSceneScope(Type type)
         {
-            Debug.Log("[SINGLETON] Singleton in scene scope for " + typeof(T).FullName);
-            return CreateInstance();
+            Debug.Log("[SINGLETON] Singleton in scene scope for " + type.FullName);
+            return CreateInstance(type);
         }
 
-        private T CreateInstance()
+        private Component CreateInstance(Type type)
         {
-            Debug.Log("[SINGLETON] Create new singleton instance for " + typeof(T).FullName);
+            Debug.Log("[SINGLETON] Create new singleton instance for " + type.FullName);
 
-            var go = new GameObject(typeof(T).FullName);
-            var value = go.AddComponent<T>();
-            
-            PostInstantiationCallback?.Invoke(value);
+            var go = new GameObject(type.Name);
+            var value = go.AddComponent(type);
+
+            var initMethod = type.GetMethods(BindingFlags.Public | BindingFlags.Static)
+                .FirstOrDefault(x => x.GetCustomAttribute<SingletonInitializerAttribute>() != null);
+            if (initMethod != null && (initMethod.GetParameters().Length != 1 || initMethod.GetParameters()[0].ParameterType == type))
+                throw new InvalidOperationException("Method " + type.FullName + "." + initMethod.Name + " must have one parameter of own type");
+
+            initMethod?.Invoke(this, new object[] { value });
 
             return value;
+        }
+
+        private void CheckRegistry(Type type)
+        {
+            if (!_singletonRegister.ContainsKey(type))
+                throw new InvalidOperationException("Type is not a registered singleton. You forget attribute " + nameof(SingletonAttribute) + "?");
+        }
+
+        private sealed class InstanceInfo
+        {
+            public Component Instance { get; internal set; }
+            public SingletonAttribute Attribute { get; }
+
+            public InstanceInfo(SingletonAttribute attribute)
+            {
+                Attribute = attribute;
+            }
         }
     }
 }
