@@ -3,6 +3,7 @@ using System.Linq;
 using UnityCommonEx.Runtime.common_ex.Scripts.Runtime.Utils.Extensions;
 using UnityEditor;
 using UnityEditor.Build;
+using UnityEditorEx.Editor.editor_ex.Scripts.Editor.Utils;
 using UnityEngine;
 
 namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
@@ -25,24 +26,17 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
 
         public override void OnGUI(string searchContext)
         {
-            PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup), out var symbols);
-            var isSingletonLogging = symbols.Contains(UnityExtensionEditorConstants.Building.Symbol.SingletonLogging);
+            var isSingletonLogging = PlayerSettingsEx.IsScriptingSymbolDefined(UnityExtensionEditorConstants.Building.Symbol.SingletonLogging);
             var newSingletonLogging = GUILayout.Toggle(isSingletonLogging, "Activate Singleton Logging");
             if (isSingletonLogging != newSingletonLogging)
             {
                 if (newSingletonLogging)
                 {
-                    PlayerSettings.SetScriptingDefineSymbols(
-                        NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup),
-                        symbols.Append(UnityExtensionEditorConstants.Building.Symbol.SingletonLogging).ToArray()
-                    );
+                    PlayerSettingsEx.AddScriptingSymbol(UnityExtensionEditorConstants.Building.Symbol.SingletonLogging);
                 }
                 else
                 {
-                    PlayerSettings.SetScriptingDefineSymbols(
-                        NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup),
-                        symbols.Remove(UnityExtensionEditorConstants.Building.Symbol.SingletonLogging).ToArray()
-                    );
+                    PlayerSettingsEx.RemoveScriptingSymbol(UnityExtensionEditorConstants.Building.Symbol.SingletonLogging);
                 }
             }
         }
