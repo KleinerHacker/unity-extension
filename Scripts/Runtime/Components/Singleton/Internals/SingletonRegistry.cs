@@ -91,6 +91,15 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton.
         {
             foreach (var item in _singletonRegister)
             {
+                var conditionMethod = item.Key.GetMethods(BindingFlags.Public | BindingFlags.Static)
+                    .FirstOrDefault(x => x.GetCustomAttribute<SingletonConditionAttribute>() != null);
+                if (conditionMethod != null && (conditionMethod.GetParameters().Length != 0 || conditionMethod.ReturnType != typeof(bool)))
+                    throw new InvalidOperationException("Method " + item.Key.FullName + "." + conditionMethod.Name +
+                                                        " must have zero parameter and must return a bool value");
+
+                if (!((bool?)conditionMethod?.Invoke(null, Array.Empty<object>()) ?? true))
+                    continue;
+                
                 visitor.Invoke(item.Key, item.Value.Attribute);
             }
         }
