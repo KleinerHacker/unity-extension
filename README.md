@@ -49,7 +49,7 @@ public class MyBehavior : SingletonBehavior<MyBehavior> {
   //Optional condition to create singlgeton or not
   [SingletonCondition]
   public static bool IsSingletonAlive() {
-    return ...
+    //...
   }  
 
   //Optional initializer for created singleton instance
