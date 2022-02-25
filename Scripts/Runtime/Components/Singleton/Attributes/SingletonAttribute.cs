@@ -1,6 +1,6 @@
 using System;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton
+namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton.Attributes
 {
     /// <summary>
     /// Represent the required attribute for <see cref="SingletonBehavior{T}"/> and <see cref="SingletonUIBehavior{T}"/>
@@ -22,6 +22,16 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton
         /// Defines time of creation
         /// </summary>
         public SingletonCreationTime CreationTime { get; set; } = SingletonCreationTime.Loading;
+
+        /// <summary>
+        /// Name of object in case of create new instance. Same names of singleton objects results in one merged game object.
+        /// </summary>
+        public string ObjectName { get; set; } = "";
+
+        /// <summary>
+        /// Throws an exception if singleton was not created or not exists (found in scene), otherwise singleton returns <c>null</c>
+        /// </summary>
+        public bool ExceptionIfNotExists { get; set; } = true;
     }
 
     /// <summary>

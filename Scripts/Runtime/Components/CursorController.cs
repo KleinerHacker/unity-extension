@@ -4,10 +4,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton;
+using UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton.Attributes;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 {
-    [Singleton(Scope = SingletonScope.Application, Instance = SingletonInstance.RequiresNewInstance, CreationTime = SingletonCreationTime.Loading)]
+    [Singleton(Scope = SingletonScope.Application, Instance = SingletonInstance.RequiresNewInstance, CreationTime = SingletonCreationTime.Loading, ObjectName = "Cursor System")]
     public sealed class CursorController : SingletonBehavior<CursorController>
     {
         #region Properties
@@ -69,7 +70,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 
         #region Builtin Methods
 
-        private void Awake()
+        protected override void DoAwake()
         {
             _settings = CursorSettings.Singleton;
             _defaultUICursor = _settings.UICursor.DefaultCursor;

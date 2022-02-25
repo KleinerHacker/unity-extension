@@ -1,33 +1,24 @@
 using System;
 using UnityEngine;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
+using UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton;
+using UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton.Attributes;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.UDebug
 {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-    public sealed class DebugFramerate : MonoBehaviour
+    [Singleton(Scope = SingletonScope.Application, Instance = SingletonInstance.RequiresNewInstance, CreationTime = SingletonCreationTime.Loading, ObjectName = "Debug Framerate")]
+    public sealed class DebugFramerate : SingletonBehavior<DebugFramerate>
     {
-        #region Static Area
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        public static void Initialize()
-        {
-            if (!DebugSettings.Singleton.ShowFramerate)
-                return;
-
-            var go = new GameObject("Debug Framerate");
-            go.AddComponent<DebugFramerate>();
-            DontDestroyOnLoad(go);
-        }
-
-        #endregion
-
+        [SingletonCondition]
+        public static bool IsSingletonAlive() => DebugSettings.Singleton.ShowFramerate;
+        
         private GUIStyle _style;
         private float _deltaTime;
         private byte _counter;
         private string _text = "";
 
-        private void Awake()
+        protected override void DoAwake()
         {
             _style = new GUIStyle
             {

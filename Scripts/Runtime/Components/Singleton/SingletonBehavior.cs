@@ -1,6 +1,6 @@
-using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton.Attributes;
+using UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton.Internals;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton
 {
@@ -10,6 +10,9 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton
     /// <typeparam name="T">Must the final implementation type of itself</typeparam>
     public abstract class SingletonBehavior<T> : MonoBehaviour where T : SingletonBehavior<T>
     {
+        /// <summary>
+        /// Returns the singleton of this behavior. Can return <c>null</c> in case of <see cref="SingletonConditionAttribute"/> method returns FALSE. 
+        /// </summary>
         public static T Singleton => SingletonHandler.Registry.GetSingleton<T>();
 
         #region Builtin Methods
@@ -18,10 +21,14 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton
         {
             var attribute = SingletonHandler.Registry.GetAttribute(GetType());
             
+#if SINGLETON_LOGGING
             Debug.Log("[SINGLETON] Try add instance to Singleton registry for " + GetType().FullName);
+#endif
             if (!SingletonHandler.Registry.TryRegisterSingleton(this))
             {
+#if SINGLETON_LOGGING
                 Debug.Log("[SINGLETON] Instance already in Singleton registry for " + GetType().FullName + ", destroy this instance");
+#endif
 
                 Destroy(this);
                 return;
@@ -29,7 +36,9 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton
 
             if (attribute.Scope == SingletonScope.Application)
             {
+#if SINGLETON_LOGGING
                 Debug.Log("[SINGLETON] Instance marked for application scope (" + nameof(DontDestroyOnLoad) + ") for " + typeof(T).FullName);
+#endif
                 DontDestroyOnLoad(this);
             }
             
@@ -44,11 +53,15 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton
             
             if (attribute.Scope == SingletonScope.Application)
             {
+#if SINGLETON_LOGGING
                 Debug.Log("[SINGLETON] Singleton marked as application scoped, no cleanup for " + GetType().FullName);
+#endif
                 return;
             }
 
+#if SINGLETON_LOGGING
             Debug.Log("[SINGLETON] Try Singleton registry cleanup for " + typeof(T).FullName);
+#endif
             SingletonHandler.Registry.TryUnregisterSingleton(this);
             
             DoDestroy();
