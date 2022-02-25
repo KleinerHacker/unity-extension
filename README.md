@@ -46,6 +46,12 @@ Example:
 [Singleton(Scope = SingletonScope.Application, Instance = SingletonInstance.RequiresNewInstance, CreationTime = SingletonCreationTime.Loading)]
 public class MyBehavior : SingletonBehavior<MyBehavior> {
 
+  //Optional condition to create singlgeton or not
+  [SingletonCondition]
+  public static bool IsSingletonAlive() {
+    return ...
+  }  
+
   //Optional initializer for created singleton instance
   [SingletonInitializer] 
   public static void InitializeSingleton(MyBehavior instance) {
