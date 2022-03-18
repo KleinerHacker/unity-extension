@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton.Attributes;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton.Internals;
@@ -50,14 +51,9 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton
         protected void OnDestroy()
         {
             var attribute = SingletonHandler.Registry.GetAttribute(GetType());
-            
+
             if (attribute.Scope == SingletonScope.Application)
-            {
-#if SINGLETON_LOGGING
-                Debug.Log("[SINGLETON] Singleton marked as application scoped, no cleanup for " + GetType().FullName);
-#endif
-                return;
-            }
+                throw new InvalidOperationException("Unable to destroy game object cause it is an application scoped singleton: " + gameObject.name);
 
 #if SINGLETON_LOGGING
             Debug.Log("[SINGLETON] Try Singleton registry cleanup for " + typeof(T).FullName);

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityCommonEx.Runtime.common_ex.Scripts.Runtime.Utils.Extensions;
 using UnityEngine;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton.Attributes;
 using Object = UnityEngine.Object;
@@ -27,7 +28,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton.
         public SingletonAttribute GetAttribute(Type type)
         {
             CheckRegistry(type);
-            return _singletonRegister[type].Attribute;
+            return _singletonRegister.GetByType(type).Attribute;
         }
 
         public T GetSingleton<T>() where T : Component
@@ -39,7 +40,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton.
         {
             CheckRegistry(type);
 
-            var instanceInfo = _singletonRegister[type];
+            var instanceInfo = _singletonRegister.GetByType(type);
             if (instanceInfo.Instance != null)
                 return instanceInfo.Instance;
 
@@ -67,7 +68,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton.
         {
             CheckRegistry(value.GetType());
 
-            var instanceInfo = _singletonRegister[value.GetType()];
+            var instanceInfo = _singletonRegister.GetByType(value.GetType());
             if (instanceInfo.Instance != null)
                 return false;
 
@@ -79,7 +80,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton.
         {
             CheckRegistry(value.GetType());
 
-            var instanceInfo = _singletonRegister[value.GetType()];
+            var instanceInfo = _singletonRegister.GetByType(value.GetType());
             if (instanceInfo.Instance == null)
                 return false;
 
@@ -99,7 +100,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton.
 
                 if (!((bool?)conditionMethod?.Invoke(null, Array.Empty<object>()) ?? true))
                     continue;
-                
+
                 visitor.Invoke(item.Key, item.Value.Attribute);
             }
         }
@@ -123,7 +124,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton.
 #if SINGLETON_LOGGING
             Debug.Log("[SINGLETON] Singleton in application scope for " + type.FullName);
 #endif
-            
+
             var newInstance = CreateInstance(type, objectName);
             if (newInstance == null)
                 return null;
@@ -181,8 +182,8 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton.
 
         private void CheckRegistry(Type type)
         {
-            if (!_singletonRegister.ContainsKey(type))
-                throw new InvalidOperationException("Type is not a registered singleton. You forget attribute " + nameof(SingletonAttribute) + "?");
+            if (!_singletonRegister.ContainsType(type))
+                throw new InvalidOperationException("Type " + type.Name + " is not a registered singleton. You forget attribute " + nameof(SingletonAttribute) + "?");
         }
 
         private sealed class InstanceInfo
