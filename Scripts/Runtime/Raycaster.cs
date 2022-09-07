@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityCommonEx.Runtime.common_ex.Scripts.Runtime.Utils.Extensions;
 using UnityEngine;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime
@@ -8,6 +9,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
     {
         private static readonly IDictionary<string, EventHandler<RaycasterEventArgs>> RaycastChangedDict = new Dictionary<string, EventHandler<RaycasterEventArgs>>();
         private static readonly IDictionary<string, EventHandler<RaycasterEventArgs>> RaycastDict = new Dictionary<string, EventHandler<RaycasterEventArgs>>();
+        private static readonly IDictionary<string, RaycastHit?> RaycastHitDict = new Dictionary<string, RaycastHit?>();
 
         #region Events
 
@@ -15,6 +17,8 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
         private static event EventHandler<RaycasterEventArgs> OnRaycast;
 
         #endregion
+
+        public static RaycastHit? GetHit(string key) => RaycastHitDict[key];
 
         public static void AddRaycastChanged(EventHandler<RaycasterEventArgs> e)
         {
@@ -78,6 +82,8 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 
         internal static void RaiseRaycastChanged(object sender, string key, RaycastHit? hit)
         {
+            RaycastHitDict.AddOrOverwrite(key, hit);
+            
             if (RaycastChangedDict.ContainsKey(key))
             {
                 RaycastChangedDict[key].Invoke(sender, new RaycasterEventArgs(key, hit));
