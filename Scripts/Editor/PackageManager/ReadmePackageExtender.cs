@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
-using System.IO;
 using Unity.EditorCoroutines.Editor;
-using Unity.Plastic.Newtonsoft.Json;
 using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.UI;
