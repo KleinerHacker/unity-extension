@@ -1,50 +1,18 @@
 using System;
-#if !UNITY_EDITOR
-using UnityAssetLoader.Runtime.asset_loader.Scripts.Runtime.Loader;
-#endif
 using UnityEditor;
+using UnityEditorEx.Runtime.editor_ex.Scripts.Runtime.Assets;
 using UnityEngine;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
 {
-    public sealed class CursorSettings : ScriptableObject
+    public sealed class CursorSettings : ProviderAsset<CursorSettings>
     {
         #region Static Area
 
-#if UNITY_EDITOR
-        private const string Path = "Assets/Resources/cursor-system.asset";
-#endif
-
-        public static CursorSettings Singleton
-        {
-            get
-            {
-#if UNITY_EDITOR
-                var settings = AssetDatabase.LoadAssetAtPath<CursorSettings>(Path);
-                if (settings == null)
-                {
-                    Debug.Log("Unable to find cursor settings, create new");
-
-                    settings = new CursorSettings();
-                    if (!AssetDatabase.IsValidFolder("Assets/Resources"))
-                    {
-                        AssetDatabase.CreateFolder("Assets", "Resources");
-                    }
-
-                    AssetDatabase.CreateAsset(settings, Path);
-                    AssetDatabase.SaveAssets();
-                    AssetDatabase.Refresh();
-                }
-
-                return settings;
-#else
-                return AssetResourcesLoader.Instance.GetAsset<CursorSettings>();
-#endif
-            }
-        }
+        public static CursorSettings Singleton => GetSingleton("Cursor System", "cursor-system.asset");
 
 #if UNITY_EDITOR
-        public static SerializedObject SerializedSingleton => new SerializedObject(Singleton);
+        public static SerializedObject SerializedSingleton => GetSerializedSingleton("Cursor System", "cursor-system.asset");
 #endif
 
         #endregion

@@ -1,53 +1,20 @@
-#if !UNITY_EDITOR
-using UnityAssetLoader.Runtime.asset_loader.Scripts.Runtime.Loader;
-#endif
 using System;
-using System.Linq;
 using UnityEditor;
+using UnityEditorEx.Runtime.editor_ex.Scripts.Runtime.Assets;
 using UnityEditorEx.Runtime.editor_ex.Scripts.Runtime.Extra;
 using UnityEngine;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Types;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
 {
-    public sealed class EnvironmentDetectionSettings : ScriptableObject
+    public sealed class EnvironmentDetectionSettings : ProviderAsset<EnvironmentDetectionSettings>
     {
         #region Static Area
 
-#if UNITY_EDITOR
-        private const string Path = "Assets/Resources/environment-detection.asset";
-#endif
-
-        public static EnvironmentDetectionSettings Singleton
-        {
-            get
-            {
-#if UNITY_EDITOR
-                var settings = AssetDatabase.LoadAssetAtPath<EnvironmentDetectionSettings>(Path);
-                if (settings == null)
-                {
-                    Debug.Log("Unable to find environment detection settings, create new");
-
-                    settings = new EnvironmentDetectionSettings();
-                    if (!AssetDatabase.IsValidFolder("Assets/Resources"))
-                    {
-                        AssetDatabase.CreateFolder("Assets", "Resources");
-                    }
-
-                    AssetDatabase.CreateAsset(settings, Path);
-                    AssetDatabase.SaveAssets();
-                    AssetDatabase.Refresh();
-                }
-
-                return settings;
-#else
-                return AssetResourcesLoader.Instance.GetAsset<EnvironmentDetectionSettings>();
-#endif
-            }
-        }
+        public static EnvironmentDetectionSettings Singleton => GetSingleton("Environment Detection", "environment-detection.asset");
 
 #if UNITY_EDITOR
-        public static SerializedObject SerializedSingleton => new SerializedObject(Singleton);
+        public static SerializedObject SerializedSingleton => GetSerializedSingleton("Environment Detection", "environment-detection.asset");
 #endif
 
         #endregion
