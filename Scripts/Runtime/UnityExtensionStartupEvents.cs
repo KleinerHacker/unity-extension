@@ -1,4 +1,4 @@
-using UnityAssetLoader.Runtime.asset_loader.Scripts.Runtime.Loader;
+using UnityAssetLoader.Runtime.asset_loader.Scripts.Runtime;
 using UnityEngine;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
 
@@ -11,11 +11,11 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("Load debug...");
-            AssetResourcesLoader.Instance.LoadAssets<DebugSettings>("");
+            AssetResourcesLoader.LoadFromResources<DebugSettings>("");
 #endif
 
             Debug.Log("Load cursor system...");
-            AssetResourcesLoader.Instance.LoadAssets<CursorSettings>("");
+            AssetResourcesLoader.LoadFromResources<CursorSettings>("");
         }
     }
 }

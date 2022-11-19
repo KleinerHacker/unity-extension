@@ -1,50 +1,18 @@
-#if !UNITY_EDITOR
-using UnityAssetLoader.Runtime.asset_loader.Scripts.Runtime.Loader;
-#endif
 using System;
 using UnityEditor;
+using UnityEditorEx.Runtime.editor_ex.Scripts.Runtime.Assets;
 using UnityEngine;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
 {
-    public sealed class RaycastSettings : ScriptableObject
+    public sealed class RaycastSettings : ProviderAsset<RaycastSettings>
     {
         #region Static Area
 
-#if UNITY_EDITOR
-        private const string Path = "Assets/Resources/raycaster.asset";
-#endif
-
-        public static RaycastSettings Singleton
-        {
-            get
-            {
-#if UNITY_EDITOR
-                var settings = AssetDatabase.LoadAssetAtPath<RaycastSettings>(Path);
-                if (settings == null)
-                {
-                    Debug.Log("Unable to find raycast settings, create new");
-
-                    settings = new RaycastSettings();
-                    if (!AssetDatabase.IsValidFolder("Assets/Resources"))
-                    {
-                        AssetDatabase.CreateFolder("Assets", "Resources");
-                    } 
-
-                    AssetDatabase.CreateAsset(settings, Path);
-                    AssetDatabase.SaveAssets();
-                    AssetDatabase.Refresh();
-                }
-
-                return settings;
-#else
-                return AssetResourcesLoader.Instance.GetAsset<RaycastSettings>();
-#endif
-            }
-        }
+        public static RaycastSettings Singleton => GetSingleton("Raycaster", "raycaster.asset");
 
 #if UNITY_EDITOR
-        public static SerializedObject SerializedSingleton => new SerializedObject(Singleton);
+        public static SerializedObject SerializedSingleton =>GetSerializedSingleton("Raycaster", "raycaster.asset");
 #endif
 
         #endregion
