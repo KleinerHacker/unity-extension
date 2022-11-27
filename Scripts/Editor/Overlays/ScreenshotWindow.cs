@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Utils.Extensions;
 
@@ -10,46 +14,64 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Overlays
 {
     public sealed class ScreenshotWindow : EditorWindow
     {
-        private static readonly Vector2 size = new Vector2(500, 350);
-        
+        private static readonly Vector2 Size = new Vector2(500, 500);
+
         #region Properties
 
-        public ScreenshotWindowType Type { get; set; }
+        public ScreenshotWindowType Type
+        {
+            get => _type;
+            set
+            {
+                _type = value;
+                CreateScreenshot(tex => _screenshot = tex);
+            }
+        }
 
         #endregion
-        
+
         private Texture2D _screenshot;
         private bool _hideUI;
+        private ScreenshotWindowType _type;
 
         private void OnEnable()
         {
             titleContent = new GUIContent("Screenshot - " + (Type == ScreenshotWindowType.GameView ? "Game" : "Editor"));
-            minSize = size;
-            maxSize = size;
-            
-            _screenshot = CreateScreenshot();
+            minSize = Size;
+            maxSize = Size;
+
+            CreateScreenshot(tex => _screenshot = tex);
         }
 
         private void OnGUI()
         {
-            var height = 500 * _screenshot.height / _screenshot.width;
-            GUI.DrawTexture(new Rect(0, 0, 500, height), _screenshot);
+            GUI.DrawTexture(new Rect(0f, 0f, 500f, 300f), _screenshot, ScaleMode.ScaleToFit);
 
-            GUILayout.Space(height + 2f);
-            
+            GUILayout.Space(302f);
+
             GUILayout.BeginHorizontal();
             {
                 _hideUI = GUILayout.Toggle(_hideUI, "Try hide UI");
             }
             GUILayout.EndHorizontal();
-            
+
             if (GUILayout.Button("Update Screenshot"))
             {
-                _screenshot = CreateScreenshot();
+                CreateScreenshot(tex => _screenshot = tex);
+            }
+
+            if (GUILayout.Button("Save Screenshot"))
+            {
+                var fileName = EditorUtility.SaveFilePanel("Save Screenshot", Application.dataPath, "screenshot.png", "png");
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    File.WriteAllBytes(fileName, _screenshot.EncodeToPNG());
+                    AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+                }
             }
         }
 
-        private Texture2D CreateScreenshot()
+        private void CreateScreenshot(Action<Texture2D> onFinished)
         {
             var canvases = new List<Canvas>();
             if (_hideUI)
@@ -75,12 +97,17 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Overlays
 
             try
             {
-                return Type switch
+                switch (Type)
                 {
-                    ScreenshotWindowType.GameView => CreateGameScreenshot(),
-                    ScreenshotWindowType.SceneView => CreateEditorScreenshot(),
-                    _ => throw new NotImplementedException(Type.ToString())
-                };
+                    case ScreenshotWindowType.GameView:
+                        CreateGameScreenshot(onFinished);
+                        break;
+                    case ScreenshotWindowType.SceneView:
+                        onFinished(CreateEditorScreenshot());
+                        break;
+                    default:
+                        throw new NotImplementedException(Type.ToString());
+                }
             }
             finally
             {
@@ -108,9 +135,30 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Overlays
                 return image;
             }
 
-            Texture2D CreateGameScreenshot()
+            void CreateGameScreenshot(Action<Texture2D> onFinished)
             {
-                return ScreenCapture.CaptureScreenshotAsTexture();
+                //Bug in ScreenCapture.CaptureScreenshotAsTexture()
+                var fileName = Path.GetTempPath() + "/screenshot.png";
+                ScreenCapture.CaptureScreenshot(fileName);
+
+                var webRequest = UnityWebRequestTexture.GetTexture("file://" + fileName);
+                EditorCoroutineUtility.StartCoroutine(LoadingAsync(webRequest, () =>
+                {
+                    if (webRequest.result != UnityWebRequest.Result.Success)
+                    {
+                        Debug.LogError("Unable to load texture: " + webRequest.result + " - " + webRequest.error + " - " + webRequest.downloadHandler.error);
+                        return;
+                    }
+
+                    var content = DownloadHandlerTexture.GetContent(webRequest);
+                    onFinished(content);
+                }), this);
+
+                IEnumerator LoadingAsync(UnityWebRequest webRequest, Action onFinished)
+                {
+                    yield return webRequest.SendWebRequest();
+                    onFinished();
+                }
             }
         }
     }
