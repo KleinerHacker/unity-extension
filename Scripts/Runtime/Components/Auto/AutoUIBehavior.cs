@@ -31,7 +31,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Auto
 
         #region Builtin Methods
 
-        protected virtual void Awake()
+        protected override void Awake()
         {
             foreach (var awakeField in awakeFields)
             {
@@ -39,7 +39,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Auto
             }
         }
 
-        protected virtual void OnEnable()
+        protected override void OnEnable()
         {
             foreach (var enableField in enableFields)
             {
@@ -47,7 +47,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.Auto
             }
         }
 
-        protected virtual void Start()
+        protected override void Start()
         {
             foreach (var startField in startFields)
             {
