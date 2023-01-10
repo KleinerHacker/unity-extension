@@ -19,7 +19,7 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Actions
 		private Terrain parentTerrain;
 	
 		// Add submenu
-		[MenuItem("Tools/Terrain/Split Terrain")]
+		[MenuItem("Tools/Terrain/Split Terrain (by Dvornik)")]
 		static void Init()
 		{
 		
@@ -30,10 +30,16 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Actions
 			window.maxSize =  new Vector2( 300f,200f );
 		
 			window.autoRepaintOnSceneChange = true;
-			window.title = "Resize terrain";
+			window.titleContent = new GUIContent("Resize terrain");
 			window.ShowUtility();
 							
 			
+		}
+
+		[MenuItem("Tools/Terrain/Split Terrain Sources")]
+		static void OpenSources()
+		{
+			Application.OpenURL("http://kostiantyn-dvornik.blogspot.com/2013/12/unity-split-terrain-script.html");
 		}
 	
 		/// <summary>
