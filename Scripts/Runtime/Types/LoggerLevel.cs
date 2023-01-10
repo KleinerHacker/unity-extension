@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Types
