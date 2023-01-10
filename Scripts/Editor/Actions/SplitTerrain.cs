@@ -19,7 +19,7 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Actions
 		private Terrain parentTerrain;
 	
 		// Add submenu
-		[MenuItem("Tools/Terrain/Split Terrain (by Dvornik)")]
+		[MenuItem("Tools/Terrain/Split Terrain (by Dvornik)/Toolbox")]
 		static void Init()
 		{
 		
@@ -36,7 +36,7 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Actions
 			
 		}
 
-		[MenuItem("Tools/Terrain/Split Terrain Sources")]
+		[MenuItem("Tools/Terrain/Split Terrain (by Dvornik)/Sources")]
 		static void OpenSources()
 		{
 			Application.OpenURL("http://kostiantyn-dvornik.blogspot.com/2013/12/unity-split-terrain-script.html");
