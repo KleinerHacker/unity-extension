@@ -1,6 +1,6 @@
 {
   "name": "org.pcsoft.extension",
-  "version": "1.8.5",
+  "version": "1.8.6",
   "displayName": "Unity Extension",
   "description": "Extension for Unity itself.",
   "unity": "2021.3",
@@ -11,7 +11,7 @@
   ],
   "dependencies": {
     "org.pcsoft.animation": "1.2.4",
-    "org.pcsoft.common-ex": "1.1.8",
+    "org.pcsoft.common-ex": "1.1.9",
     "org.pcsoft.editor-ex":"1.1.16",
     "org.pcsoft.android-ex": "1.0.1",
     "com.unity.inputsystem": "1.4.0",
