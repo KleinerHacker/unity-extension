@@ -1,9 +1,7 @@
 using System;
 using UnityEditor;
 using UnityEditorEx.Runtime.editor_ex.Scripts.Runtime.Assets;
-using UnityEditorEx.Runtime.editor_ex.Scripts.Runtime.Extra;
 using UnityEngine;
-using UnityExtension.Runtime.extension.Scripts.Runtime.Types;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
 {
@@ -22,51 +20,56 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
         #region Inspector Data
 
         [SerializeField]
-        private EnvironmentConstraintItem[] items = Array.Empty<EnvironmentConstraintItem>();
+        private WindowsEnvironmentTarget[] windows = Array.Empty<WindowsEnvironmentTarget>();
+
+        [SerializeField]
+        private LinuxEnvironmentTarget[] linux = Array.Empty<LinuxEnvironmentTarget>();
+
+        [SerializeField]
+        private MacEnvironmentTarget[] mac = Array.Empty<MacEnvironmentTarget>();
+
+        [SerializeField]
+        private AndroidEnvironmentTarget[] android = Array.Empty<AndroidEnvironmentTarget>();
+
+        [SerializeField]
+        private IOSEnvironmentTarget[] ios = Array.Empty<IOSEnvironmentTarget>();
 
         #endregion
 
         #region Properties
 
-        public EnvironmentConstraintItem[] Items => items;
+        public WindowsEnvironmentTarget[] Windows => windows;
 
-        #endregion
+        public LinuxEnvironmentTarget[] Linux => linux;
 
-        #region Builtin Methods
+        public MacEnvironmentTarget[] Mac => mac;
 
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            foreach (var item in items)
-            {
-                if (string.IsNullOrWhiteSpace(item.Guid))
-                {
-                    item.Guid = Guid.NewGuid().ToString();
-                }
-            }
-        }
-#endif
+        public AndroidEnvironmentTarget[] Android => android;
+
+        public IOSEnvironmentTarget[] IOS => ios;
 
         #endregion
     }
 
     [Serializable]
-    public sealed class EnvironmentConstraintItem : IdentifiableObject
+    public abstract class EnvironmentTarget
     {
         #region Inspector Data
 
         [SerializeField]
         private string name;
 
-        [Space]
-        [InputDevice]
-        [Tooltip("All required input devices (AND)")]
         [SerializeField]
-        private string[] inputs;
-
-        [Tooltip("Only available on given runtime systems (OR)")]
+        private bool requiresKeyboard;
+        
         [SerializeField]
-        private EnvironmentSystemConstraintItem[] runtimeSystemItems;
+        private bool requiresMouse;
+        
+        [SerializeField]
+        private bool requiresTouch;
+        
+        [SerializeField]
+        private bool requiresGamepad;
 
         #endregion
 
@@ -74,33 +77,63 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
 
         public string Name => name;
 
-        public string[] Inputs => inputs;
+        public bool RequiresKeyboard => requiresKeyboard;
 
-        public EnvironmentSystemConstraintItem[] RuntimeSystemItems => runtimeSystemItems;
+        public bool RequiresMouse => requiresMouse;
+
+        public bool RequiresTouch => requiresTouch;
+
+        public bool RequiresGamepad => requiresGamepad;
 
         #endregion
     }
 
     [Serializable]
-    public sealed class EnvironmentSystemConstraintItem
+    public sealed class WindowsEnvironmentTarget : EnvironmentTarget
+    {
+    }
+
+    [Serializable]
+    public sealed class LinuxEnvironmentTarget : EnvironmentTarget
     {
         #region Inspector Data
 
         [SerializeField]
-        private RuntimePlatform platform;
-
-        [Header("Android / iOS")]
-        [SerializeField]
-        private bool tvRequired;
+        private bool requiresSteamDeck;
 
         #endregion
 
         #region Properties
 
-        public RuntimePlatform Platform => platform;
-
-        public bool TVRequired => tvRequired;
+        public bool RequiresSteamDeck => requiresSteamDeck;
 
         #endregion
+    }
+
+    [Serializable]
+    public sealed class MacEnvironmentTarget : EnvironmentTarget
+    {
+    }
+
+    [Serializable]
+    public sealed class AndroidEnvironmentTarget : EnvironmentTarget
+    {
+        #region Inspector Data
+
+        [SerializeField]
+        private bool requiresTv;
+
+        #endregion
+
+        #region Properties
+
+        public bool RequiresTv => requiresTv;
+
+        #endregion
+    }
+    
+    [Serializable]
+    public sealed class IOSEnvironmentTarget : EnvironmentTarget
+    {
     }
 }
