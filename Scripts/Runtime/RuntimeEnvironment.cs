@@ -70,20 +70,20 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 #if PCSOFT_ENV_LOGGING
                     Debug.Log("[ENV] > Find fit environment target: " + item.Name);
 #endif
-                    var groupNames = settings.Groups
-                        .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.Windows && y.Name == item.Name))
+                    var groupName = settings.Groups
+                        .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.Windows && y.TargetName == item.Name))
                         .Select(x => x.Name)
-                        .ToArray();
+                        .FirstOrDefault();
 #if PCSOFT_ENV_LOGGING
-                    Debug.Log("[ENV] > Find fit environment groups: " + string.Join(',', groupNames));
+                    Debug.Log("[ENV] > Find fit environment group: " + groupName);
 #endif
 
-                    return new Environment(Application.platform, item.Name, groupNames);
+                    return new Environment(Application.platform, item.Name, groupName);
                 }
             }
 
             Debug.LogWarning("[ENV] Unable to find any fitting environment target");
-            return new Environment(Application.platform, null, Array.Empty<string>());
+            return new Environment(Application.platform, null, null);
         }
 
         private static Environment RunLinuxDetection()
@@ -107,20 +107,20 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 #if PCSOFT_ENV_LOGGING
                     Debug.Log("[ENV] > Find fit environment target: " + item.Name);
 #endif
-                    var groupNames = settings.Groups
-                        .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.Linux && y.Name == item.Name))
+                    var groupName = settings.Groups
+                        .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.Linux && y.TargetName == item.Name))
                         .Select(x => x.Name)
-                        .ToArray();
+                        .FirstOrDefault();
 #if PCSOFT_ENV_LOGGING
-                    Debug.Log("[ENV] > Find fit environment groups: " + string.Join(',', groupNames));
+                    Debug.Log("[ENV] > Find fit environment groups: " + groupName);
 #endif
 
-                    return new Environment(Application.platform, item.Name, groupNames);
+                    return new Environment(Application.platform, item.Name, groupName);
                 }
             }
 
             Debug.LogWarning("[ENV] Unable to find any fitting environment target");
-            return new Environment(Application.platform, null, Array.Empty<string>());
+            return new Environment(Application.platform, null, null);
         }
 
         private static Environment RunMacDetection()
@@ -137,20 +137,20 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 #if PCSOFT_ENV_LOGGING
                     Debug.Log("[ENV] > Find fit environment target: " + item.Name);
 #endif
-                    var groupNames = settings.Groups
-                        .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.Mac && y.Name == item.Name))
+                    var groupName = settings.Groups
+                        .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.Mac && y.TargetName == item.Name))
                         .Select(x => x.Name)
-                        .ToArray();
+                        .FirstOrDefault();
 #if PCSOFT_ENV_LOGGING
-                    Debug.Log("[ENV] > Find fit environment groups: " + string.Join(',', groupNames));
+                    Debug.Log("[ENV] > Find fit environment groups: " + groupName);
 #endif
 
-                    return new Environment(Application.platform, item.Name, groupNames);
+                    return new Environment(Application.platform, item.Name, groupName);
                 }
             }
 
             Debug.LogWarning("[ENV] Unable to find any fitting environment target");
-            return new Environment(Application.platform, null, Array.Empty<string>());
+            return new Environment(Application.platform, null, null);
         }
 
 #if PLATFORM_ANDROID
@@ -170,20 +170,20 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 #if PCSOFT_ENV_LOGGING
                     Debug.Log("[ENV] > Find fit environment target: " + item.Name);
 #endif
-                    var groupNames = settings.Groups
+                    var groupName = settings.Groups
                         .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.Android && y.Name == item.Name))
                         .Select(x => x.Name)
-                        .ToArray();
+                        .FirstOrDefault();
 #if PCSOFT_ENV_LOGGING
-                    Debug.Log("[ENV] > Find fit environment groups: " + string.Join(',', groupNames));
+                    Debug.Log("[ENV] > Find fit environment groups: " + groupName);
 #endif
 
-                    return new Environment(Application.platform, item.Name, groupNames);
+                    return new Environment(Application.platform, item.Name, groupName);
                 }
             }
 
             Debug.LogWarning("[ENV] Unable to find any fitting environment target");
-            return new Environment(Application.platform, null, Array.Empty<string>());
+            return new Environment(Application.platform, null, null);
         }
 #endif
 
@@ -201,20 +201,20 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 #if PCSOFT_ENV_LOGGING
                     Debug.Log("[ENV] > Find fit environment target: " + item.Name);
 #endif
-                    var groupNames = settings.Groups
-                        .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.IOS && y.Name == item.Name))
+                    var groupName = settings.Groups
+                        .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.IOS && y.TargetName == item.Name))
                         .Select(x => x.Name)
-                        .ToArray();
+                        .FirstOrDefault();
 #if PCSOFT_ENV_LOGGING
-                    Debug.Log("[ENV] > Find fit environment groups: " + string.Join(',', groupNames));
+                    Debug.Log("[ENV] > Find fit environment groups: " + groupName);
 #endif
 
-                    return new Environment(Application.platform, item.Name, groupNames);
+                    return new Environment(Application.platform, item.Name, groupName);
                 }
             }
 
             Debug.LogWarning("[ENV] Unable to find any fitting environment target");
-            return new Environment(Application.platform, null, Array.Empty<string>());
+            return new Environment(Application.platform, null, null);
         }
 
 #if PCSOFT_ENV_STEAM && STEAMWORKS_NET && !DISABLESTEAMWORKS
@@ -237,11 +237,11 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
         }
     }
 
-    public record Environment(RuntimePlatform Platform, string DetectedEnvironmentName, string[] DetectedEnvironmentGroups)
+    public record Environment(RuntimePlatform Platform, string DetectedEnvironmentName, string DetectedEnvironmentGroup)
     {
         public RuntimePlatform Platform { get; } = Platform;
         public string DetectedEnvironmentName { get; } = DetectedEnvironmentName;
-        public string[] DetectedEnvironmentGroups { get; } = DetectedEnvironmentGroups;
+        public string DetectedEnvironmentGroup { get; } = DetectedEnvironmentGroup;
     }
 
 #endif

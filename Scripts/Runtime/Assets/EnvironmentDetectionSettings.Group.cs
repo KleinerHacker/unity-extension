@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
 {
@@ -39,8 +41,9 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
         [SerializeField]
         private EnvironmentSupportedPlatform platform;
 
+        [FormerlySerializedAs("name")]
         [SerializeField]
-        private string name;
+        private string targetName;
 
         #endregion
 
@@ -54,11 +57,11 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
 #endif
         }
 
-        public string Name
+        public string TargetName
         {
-            get => name;
+            get => targetName;
 #if UNITY_EDITOR
-            set => name = value;
+            set => targetName = value;
 #endif
         }
 
