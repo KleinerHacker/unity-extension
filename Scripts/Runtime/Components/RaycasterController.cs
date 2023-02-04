@@ -6,6 +6,7 @@ using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 {
+#if PCSOFT_RAYCASTER
     [AddComponentMenu(UnityExtensionConstants.Root + "/Raycaster")]
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Camera))]
@@ -113,4 +114,5 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
             }
         }
     }
+#endif
 }

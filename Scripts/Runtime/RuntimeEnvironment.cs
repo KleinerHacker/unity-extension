@@ -2,7 +2,7 @@
 #define DISABLESTEAMWORKS
 #endif
 
-#if ENV_STEAM && STEAMWORKS_NET && !DISABLESTEAMWORKS
+#if PCSOFT_ENV_STEAM && STEAMWORKS_NET && !DISABLESTEAMWORKS
 using Steamworks;
 #endif
 using System;
@@ -16,6 +16,7 @@ using UnityAndroidEx.Runtime.android_ex.Scripts.Runtime.Utils;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime
 {
+#if PCSOFT_ENV
     public static class RuntimeEnvironment
     {
         public static Environment CurrentEnvironment { get; private set; }
@@ -23,7 +24,10 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
         public static void Initialize()
         {
+            Debug.Log("[ENV] Initialize...");
+#if PCSOFT_ENV_LOGGING
             Debug.Log("[ENV] Detect environment target...");
+#endif
             switch (Application.platform)
             {
                 case RuntimePlatform.WindowsEditor:
@@ -54,18 +58,25 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 
         private static Environment RunWindowsDetection()
         {
+#if PCSOFT_ENV_LOGGING
+            Debug.Log("[ENV] > Environment Platform: Windows");
+#endif
             var settings = EnvironmentDetectionSettings.Singleton;
             foreach (var item in settings.Windows)
             {
                 var inputCheck = RunSimpleInputCheck(item);
                 if (inputCheck)
                 {
+#if PCSOFT_ENV_LOGGING
                     Debug.Log("[ENV] > Find fit environment target: " + item.Name);
+#endif
                     var groupNames = settings.Groups
                         .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.Windows && y.Name == item.Name))
                         .Select(x => x.Name)
                         .ToArray();
+#if PCSOFT_ENV_LOGGING
                     Debug.Log("[ENV] > Find fit environment groups: " + string.Join(',', groupNames));
+#endif
 
                     return new Environment(Application.platform, item.Name, groupNames);
                 }
@@ -77,12 +88,15 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 
         private static Environment RunLinuxDetection()
         {
+#if PCSOFT_ENV_LOGGING
+            Debug.Log("[ENV] > Environment Platform: Linux");
+#endif
             var settings = EnvironmentDetectionSettings.Singleton;
             foreach (var item in settings.Linux)
             {
                 var inputCheck = RunSimpleInputCheck(item);
                 var steamCheck =
-#if ENV_STEAM && STEAMWORKS_NET && !DISABLESTEAMWORKS
+#if PCSOFT_ENV_STEAM && STEAMWORKS_NET && !DISABLESTEAMWORKS
                     RunSteamCheck(item);
 #else
                     true;
@@ -90,12 +104,16 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 
                 if (inputCheck && steamCheck)
                 {
+#if PCSOFT_ENV_LOGGING
                     Debug.Log("[ENV] > Find fit environment target: " + item.Name);
+#endif
                     var groupNames = settings.Groups
                         .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.Linux && y.Name == item.Name))
                         .Select(x => x.Name)
                         .ToArray();
+#if PCSOFT_ENV_LOGGING
                     Debug.Log("[ENV] > Find fit environment groups: " + string.Join(',', groupNames));
+#endif
 
                     return new Environment(Application.platform, item.Name, groupNames);
                 }
@@ -107,18 +125,25 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 
         private static Environment RunMacDetection()
         {
+#if PCSOFT_ENV_LOGGING
+            Debug.Log("[ENV] > Environment Platform: Mac");
+#endif
             var settings = EnvironmentDetectionSettings.Singleton;
             foreach (var item in settings.Mac)
             {
                 var inputCheck = RunSimpleInputCheck(item);
                 if (inputCheck)
                 {
+#if PCSOFT_ENV_LOGGING
                     Debug.Log("[ENV] > Find fit environment target: " + item.Name);
+#endif
                     var groupNames = settings.Groups
                         .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.Mac && y.Name == item.Name))
                         .Select(x => x.Name)
                         .ToArray();
+#if PCSOFT_ENV_LOGGING
                     Debug.Log("[ENV] > Find fit environment groups: " + string.Join(',', groupNames));
+#endif
 
                     return new Environment(Application.platform, item.Name, groupNames);
                 }
@@ -131,6 +156,9 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 #if PLATFORM_ANDROID
         private static Environment RunAndroidDetection()
         {
+#if PCSOFT_ENV_LOGGING
+            Debug.Log("[ENV] > Environment Platform: Android");
+#endif
             var settings = EnvironmentDetectionSettings.Singleton;
             foreach (var item in settings.Android)
             {
@@ -139,13 +167,17 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 
                 if (inputCheck && tvCheck)
                 {
+#if PCSOFT_ENV_LOGGING
                     Debug.Log("[ENV] > Find fit environment target: " + item.Name);
+#endif
                     var groupNames = settings.Groups
                         .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.Android && y.Name == item.Name))
                         .Select(x => x.Name)
                         .ToArray();
+#if PCSOFT_ENV_LOGGING
                     Debug.Log("[ENV] > Find fit environment groups: " + string.Join(',', groupNames));
-                    
+#endif
+
                     return new Environment(Application.platform, item.Name, groupNames);
                 }
             }
@@ -157,18 +189,25 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 
         private static Environment RunIOSDetection()
         {
+#if PCSOFT_ENV_LOGGING
+            Debug.Log("[ENV] > Environment Platform: IOS");
+#endif
             var settings = EnvironmentDetectionSettings.Singleton;
             foreach (var item in settings.IOS)
             {
                 var inputCheck = RunSimpleInputCheck(item);
                 if (inputCheck)
                 {
+#if PCSOFT_ENV_LOGGING
                     Debug.Log("[ENV] > Find fit environment target: " + item.Name);
+#endif
                     var groupNames = settings.Groups
                         .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.IOS && y.Name == item.Name))
                         .Select(x => x.Name)
                         .ToArray();
+#if PCSOFT_ENV_LOGGING
                     Debug.Log("[ENV] > Find fit environment groups: " + string.Join(',', groupNames));
+#endif
 
                     return new Environment(Application.platform, item.Name, groupNames);
                 }
@@ -178,7 +217,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
             return new Environment(Application.platform, null, Array.Empty<string>());
         }
 
-#if ENV_STEAM && STEAMWORKS_NET && !DISABLESTEAMWORKS
+#if PCSOFT_ENV_STEAM && STEAMWORKS_NET && !DISABLESTEAMWORKS
         private static bool RunSteamCheck(LinuxEnvironmentTarget item)
         {
             var steamDeckCheck = !item.RequiresSteamDeck || SteamUtils.IsSteamRunningOnSteamDeck();
@@ -204,4 +243,6 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
         public string DetectedEnvironmentName { get; } = DetectedEnvironmentName;
         public string[] DetectedEnvironmentGroups { get; } = DetectedEnvironmentGroups;
     }
+
+#endif
 }

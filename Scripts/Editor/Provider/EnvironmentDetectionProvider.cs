@@ -17,7 +17,7 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
         }
 
         #endregion
-        
+
         private SerializedObject _settings;
         private SerializedProperty _windowsProperty;
         private SerializedProperty _linuxProperty;
@@ -34,8 +34,8 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
         private EnvironmentTargetGroupList _groupList;
 
         private int _tab = 0;
-        
-        public EnvironmentDetectionProvider() : base("Project/Player/Environment Detection", SettingsScope.Project, new []{"Tooling", "Environment", "Detection"})
+
+        public EnvironmentDetectionProvider() : base("Project/Player/Environment Detection", SettingsScope.Project, new[] { "Tooling", "Environment", "Detection" })
         {
         }
 
@@ -62,13 +62,32 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
 
         public override void OnTitleBarGUI()
         {
-            ExtendedEditorGUILayout.SymbolField("Activate Steam Support", "ENV_STEAM");
+            GUILayout.BeginVertical();
+            {
+                ExtendedEditorGUILayout.SymbolField("Activate System", "PCSOFT_ENV");
+                EditorGUI.BeginDisabledGroup(
+#if PCSOFT_ENV
+                    false
+#else
+                    true
+#endif
+                );
+                {
+                    ExtendedEditorGUILayout.SymbolField("Verbose Logging", "PCSOFT_ENV_LOGGING");
+                    ExtendedEditorGUILayout.SymbolField("Activate Steam Support", "PCSOFT_ENV_STEAM");
+                }
+                EditorGUI.EndDisabledGroup();
+            }
+            GUILayout.EndVertical();
         }
 
         public override void OnGUI(string searchContext)
         {
             _settings.Update();
             
+            GUILayout.Space(15f);
+
+#if PCSOFT_ENV
             GUILayout.Label("Environment Target Groups", EditorStyles.boldLabel);
             _groupList.DoLayoutList();
 
@@ -108,7 +127,10 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
                     EditorGUILayout.HelpBox("Unknown page", MessageType.Error);
                     break;
             }
-            
+#else
+            EditorGUILayout.HelpBox("Environment Detection System is deactivated", MessageType.Info);
+#endif
+
             _settings.ApplyModifiedProperties();
         }
     }

@@ -8,11 +8,12 @@ using UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton.Attr
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 {
+#if PCSOFT_CURSOR
     [Singleton(Scope = SingletonScope.Application, Instance = SingletonInstance.RequiresNewInstance, CreationTime = SingletonCreationTime.Loading, ObjectName = "Cursor System")]
     public sealed class CursorController : SingletonBehavior<CursorController>
     {
         #region Properties
-        
+
         private CursorState _cursorState = CursorState.Default;
         private CursorState _cursorUIState = CursorState.Default;
         private bool _isUICursorActive;
@@ -86,7 +87,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 
                 _counter = 0f;
             }
-            
+
             if (_settings.UICursor.UseUICursors && _settings.UICursor.DefaultCursor.Active && EventSystem.current.IsPointerOverGameObject())
             {
                 if (!IsUICursorActive)
@@ -132,24 +133,43 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
         private void OnCursorChanged()
         {
             var cursorSettings = CursorSettings.Singleton;
-            
+
             if (IsUICursorActive)
             {
                 switch (_cursorUIState)
                 {
                     case CursorState.Default:
+#if PCSOFT_CURSOR_LOGGING
+                        Debug.Log("[CURSOR] > Set cursor to default");
+#endif
+
                         if (cursorSettings.UICursor.UseUICursors && cursorSettings.UICursor.DefaultCursor.Active)
                         {
+#if PCSOFT_CURSOR_LOGGING
+                            Debug.Log("[CURSOR] > UI cursor");
+#endif
                             Cursor.SetCursor(cursorSettings.UICursor.DefaultCursor.Cursor, cursorSettings.UICursor.DefaultCursor.Hotspot, CursorMode.Auto);
                         }
                         else
                         {
+#if PCSOFT_CURSOR_LOGGING
+                            Debug.Log("[CURSOR] > Native cursor");
+#endif
                             Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
                         }
+
                         break;
                     case CursorState.Changed:
+#if PCSOFT_CURSOR_LOGGING
+                        Debug.Log("[CURSOR] > Change cursor");
+#endif
+                        
                         if (cursorSettings.UICursor.UseUICursors)
                         {
+#if PCSOFT_CURSOR_LOGGING
+                            Debug.Log("[CURSOR] > UI cursor");
+#endif
+                            
                             var cursorItem = cursorSettings.UICursor.Items.FirstOrDefault(x => x.Identifier == _cursorUIKey);
                             if (cursorItem != null)
                             {
@@ -157,9 +177,16 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
                             }
                             else
                             {
-                                Debug.LogWarning("UI Cursor cannot changed: Cursor with key " + _cursorUIKey + " not exists");
+                                Debug.LogWarning("[CURSOR] UI cursor cannot changed: Cursor with key " + _cursorUIKey + " not exists");
                             }
                         }
+                        else
+                        {
+#if PCSOFT_CURSOR_LOGGING
+                            Debug.Log("[CURSOR] > Native cursor");
+#endif
+                        }
+
                         break;
                     default:
                         throw new NotImplementedException(_cursorUIState.ToString());
@@ -170,9 +197,17 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
                 switch (_cursorState)
                 {
                     case CursorState.Default:
+#if PCSOFT_CURSOR_LOGGING
+                        Debug.Log("[CURSOR] > Set cursor to default");
+                        Debug.Log("[CURSOR] > Native cursor");
+#endif
                         Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
                         break;
                     case CursorState.Changed:
+#if PCSOFT_CURSOR_LOGGING
+                        Debug.Log("[CURSOR] > Change cursor");
+                        Debug.Log("[CURSOR] > Native cursor");
+#endif
                         var cursorItem = cursorSettings.Items.FirstOrDefault(x => x.Identifier == _cursorKey);
                         if (cursorItem != null)
                         {
@@ -180,8 +215,9 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
                         }
                         else
                         {
-                            Debug.LogWarning("System Cursor cannot changed: Cursor with key " + _cursorKey + " not exists");
+                            Debug.LogWarning("[CURSOR] System Cursor cannot changed: Cursor with key " + _cursorKey + " not exists");
                         }
+
                         break;
                     default:
                         throw new NotImplementedException(_cursorState.ToString());
@@ -195,4 +231,5 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
         Default,
         Changed,
     }
+#endif
 }

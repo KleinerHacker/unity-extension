@@ -8,6 +8,7 @@ using UnityExtension.Runtime.extension.Scripts.Runtime.Components;
 
 namespace UnityExtension.Editor.extension.Scripts.Editor.Components
 {
+#if PCSOFT_RAYCASTER
     [CustomEditor(typeof(RaycasterController))]
     public sealed class RaycasterControllerEditor : ExtendedEditor
     {
@@ -48,4 +49,5 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Components
             serializedObject.ApplyModifiedProperties();
         }
     }
+#endif
 }

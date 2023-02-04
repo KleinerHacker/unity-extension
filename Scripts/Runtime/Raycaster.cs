@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime
 {
+#if PCSOFT_RAYCASTER
     public static class Raycaster
     {
         private static readonly IDictionary<string, EventHandler<RaycasterEventArgs>> RaycastChangedDict = new Dictionary<string, EventHandler<RaycasterEventArgs>>();
@@ -49,7 +50,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 
             RaycastChangedDict[key] -= e;
         }
-        
+
         public static void AddRaycast(EventHandler<RaycasterEventArgs> e)
         {
             OnRaycast += e;
@@ -82,8 +83,11 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 
         internal static void RaiseRaycastChanged(object sender, string key, RaycastHit? hit)
         {
+#if PCSOFT_RAYCASTER_LOGGING
+            Debug.Log("[RAYCASTER] Raise Raycast Change for " + key);
+#endif
             RaycastHitDict.AddOrOverwrite(key, hit);
-            
+
             if (RaycastChangedDict.ContainsKey(key))
             {
                 RaycastChangedDict[key].Invoke(sender, new RaycasterEventArgs(key, hit));
@@ -91,9 +95,12 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 
             OnRaycastChanged?.Invoke(sender, new RaycasterEventArgs(key, hit));
         }
-        
+
         internal static void RaiseRaycast(object sender, string key, RaycastHit? hit)
         {
+#if PCSOFT_RAYCASTER_LOGGING
+            Debug.Log("[RAYCASTER] Raise Raycast for " + key);
+#endif
             if (RaycastDict.ContainsKey(key))
             {
                 RaycastDict[key].Invoke(sender, new RaycasterEventArgs(key, hit));
@@ -114,4 +121,5 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
             Hit = hit;
         }
     }
+#endif
 }

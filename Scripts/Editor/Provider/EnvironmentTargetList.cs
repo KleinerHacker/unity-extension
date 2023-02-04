@@ -73,14 +73,14 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
 
         protected override void DoDrawHeaderCallback(Rect rect)
         {
-#if ENV_STEAM && STEAMWORKS_NET && !DISABLESTEAMWORKS
+#if PCSOFT_ENV_STEAM && STEAMWORKS_NET && !DISABLESTEAMWORKS
             GUI.Label(new Rect(rect.x-2.5f, rect.y, 20f, 20f), new GUIContent(EditorGUIUtility.IconContent("d_BuildSettings.PSP2.Small").image, "Steam Deck"));
 #endif
         }
 
         protected override void DoDrawElementCallback(SerializedProperty selectedProperty, Rect rect, int i, bool isactive, bool isfocused)
         {
-#if ENV_STEAM && STEAMWORKS_NET && !DISABLESTEAMWORKS
+#if PCSOFT_ENV_STEAM && STEAMWORKS_NET && !DISABLESTEAMWORKS
             var steamDeckProperty = selectedProperty.FindPropertyRelative("requiresSteamDeck");
             EditorGUI.PropertyField(new Rect(rect.x, rect.y, 20f, 20f), steamDeckProperty, GUIContent.none);
 #endif

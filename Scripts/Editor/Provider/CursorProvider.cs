@@ -1,4 +1,5 @@
 using UnityEditor;
+using UnityEditorEx.Editor.editor_ex.Scripts.Editor.Utils;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
@@ -16,7 +17,7 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
         }
 
         #endregion
-        
+
         private SerializedObject _settings;
         private SerializedProperty _useUICursorsProperty;
         private SerializedProperty _uiCursorCheckProperty;
@@ -28,8 +29,8 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
         private CursorList _uiCursorList;
 
         private bool _uiFold;
-        
-        public CursorProvider() : base("Project/Player/Cursors", SettingsScope.Project, new [] { "Tooling", "Cursor", "Mouse" })
+
+        public CursorProvider() : base("Project/UI/Cursors", SettingsScope.Project, new[] { "Tooling", "Cursor", "Mouse" })
         {
         }
 
@@ -50,10 +51,33 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
             _uiCursorList = new CursorList(_settings, _uiCursorItemsProperty);
         }
 
+        public override void OnTitleBarGUI()
+        {
+            GUILayout.BeginVertical();
+            {
+                ExtendedEditorGUILayout.SymbolField("Activate System", "PCSOFT_CURSOR");
+                EditorGUI.BeginDisabledGroup(
+#if PCSOFT_CURSOR
+                    false
+#else
+                    true
+#endif
+                );
+                {
+                    ExtendedEditorGUILayout.SymbolField("Verbose Logging", "PCSOFT_CURSOR_LOGGING");
+                }
+                EditorGUI.EndDisabledGroup();
+            }
+            GUILayout.EndVertical();
+        }
+
         public override void OnGUI(string searchContext)
         {
             _settings.Update();
+            
+            GUILayout.Space(15f);
 
+#if PCSOFT_CURSOR
             _cursorList.DoLayoutList();
             EditorGUILayout.Space();
 
@@ -71,8 +95,12 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
                 }
                 EditorGUI.EndDisabledGroup();
             }
+
             EditorGUI.indentLevel = 0;
             EditorGUILayout.EndFoldoutHeaderGroup();
+#else
+            EditorGUILayout.HelpBox("Cursor System is deactivated", MessageType.Info);
+#endif
 
             _settings.ApplyModifiedProperties();
         }
