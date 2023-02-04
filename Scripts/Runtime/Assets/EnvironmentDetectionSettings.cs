@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEditor;
 using UnityEditorEx.Runtime.editor_ex.Scripts.Runtime.Assets;
 using UnityEngine;
@@ -34,6 +35,9 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
         [SerializeField]
         private IOSEnvironmentTarget[] ios = Array.Empty<IOSEnvironmentTarget>();
 
+        [SerializeField]
+        private EnvironmentTargetGroup[] groups = Array.Empty<EnvironmentTargetGroup>();
+
         #endregion
 
         #region Properties
@@ -48,92 +52,36 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
 
         public IOSEnvironmentTarget[] IOS => ios;
 
+        public EnvironmentTargetGroup[] Groups => groups;
+
         #endregion
+
+        public EnvironmentTarget[] GetTargets(EnvironmentSupportedPlatform platform)
+        {
+            switch (platform)
+            {
+                case EnvironmentSupportedPlatform.Windows:
+                    return windows.Cast<EnvironmentTarget>().ToArray();
+                case EnvironmentSupportedPlatform.Linux:
+                    return linux.Cast<EnvironmentTarget>().ToArray();
+                case EnvironmentSupportedPlatform.Mac:
+                    return mac.Cast<EnvironmentTarget>().ToArray();
+                case EnvironmentSupportedPlatform.Android:
+                    return android.Cast<EnvironmentTarget>().ToArray();
+                case EnvironmentSupportedPlatform.IOS:
+                    return ios.Cast<EnvironmentTarget>().ToArray();
+                default:
+                    throw new NotImplementedException(platform.ToString());
+            }
+        }
     }
 
-    [Serializable]
-    public abstract class EnvironmentTarget
+    public enum EnvironmentSupportedPlatform
     {
-        #region Inspector Data
-
-        [SerializeField]
-        private string name;
-
-        [SerializeField]
-        private bool requiresKeyboard;
-        
-        [SerializeField]
-        private bool requiresMouse;
-        
-        [SerializeField]
-        private bool requiresTouch;
-        
-        [SerializeField]
-        private bool requiresGamepad;
-
-        #endregion
-
-        #region Properties
-
-        public string Name => name;
-
-        public bool RequiresKeyboard => requiresKeyboard;
-
-        public bool RequiresMouse => requiresMouse;
-
-        public bool RequiresTouch => requiresTouch;
-
-        public bool RequiresGamepad => requiresGamepad;
-
-        #endregion
-    }
-
-    [Serializable]
-    public sealed class WindowsEnvironmentTarget : EnvironmentTarget
-    {
-    }
-
-    [Serializable]
-    public sealed class LinuxEnvironmentTarget : EnvironmentTarget
-    {
-        #region Inspector Data
-
-        [SerializeField]
-        private bool requiresSteamDeck;
-
-        #endregion
-
-        #region Properties
-
-        public bool RequiresSteamDeck => requiresSteamDeck;
-
-        #endregion
-    }
-
-    [Serializable]
-    public sealed class MacEnvironmentTarget : EnvironmentTarget
-    {
-    }
-
-    [Serializable]
-    public sealed class AndroidEnvironmentTarget : EnvironmentTarget
-    {
-        #region Inspector Data
-
-        [SerializeField]
-        private bool requiresTv;
-
-        #endregion
-
-        #region Properties
-
-        public bool RequiresTv => requiresTv;
-
-        #endregion
-    }
-    
-    [Serializable]
-    public sealed class IOSEnvironmentTarget : EnvironmentTarget
-    {
+        Windows,
+        Linux,
+        Mac,
+        Android,
+        IOS,
     }
 }

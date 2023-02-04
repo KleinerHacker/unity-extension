@@ -20,7 +20,7 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
 
         private void DrawHeaderCallback(Rect rect)
         {
-            GUI.Label(new Rect(rect.x + HeaderMarginLeft, rect.y, 150f, 20f), new GUIContent("Name", null, "Used as identifier"));
+            GUI.Label(new Rect(rect.x + HeaderMarginLeft, rect.y, 150f, 20f), new GUIContent("Name", null, "Used as identifier"), EditorStyles.boldLabel);
             GUI.Label(new Rect(rect.x + HeaderMarginLeft + 177.5f, rect.y, 20f, 20f), new GUIContent(EditorGUIUtility.IconContent("d_InputField Icon").image, "Keyboard"));
             GUI.Label(new Rect(rect.x + HeaderMarginLeft + 202.5f, rect.y, 20f, 20f), new GUIContent(EditorGUIUtility.IconContent("d_EventTrigger Icon").image, "Mouse"));
             GUI.Label(new Rect(rect.x + HeaderMarginLeft + 227.5f, rect.y, 20f, 20f), new GUIContent(EditorGUIUtility.IconContent("d_TouchInputModule Icon").image, "Touch"));

@@ -5,6 +5,8 @@
 #if ENV_STEAM && STEAMWORKS_NET && !DISABLESTEAMWORKS
 using Steamworks;
 #endif
+using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
@@ -59,12 +61,18 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
                 if (inputCheck)
                 {
                     Debug.Log("[ENV] > Find fit environment target: " + item.Name);
-                    return new Environment(Application.platform, item.Name);
+                    var groupNames = settings.Groups
+                        .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.Windows && y.Name == item.Name))
+                        .Select(x => x.Name)
+                        .ToArray();
+                    Debug.Log("[ENV] > Find fit environment groups: " + string.Join(',', groupNames));
+
+                    return new Environment(Application.platform, item.Name, groupNames);
                 }
             }
 
             Debug.LogWarning("[ENV] Unable to find any fitting environment target");
-            return new Environment(Application.platform, null);
+            return new Environment(Application.platform, null, Array.Empty<string>());
         }
 
         private static Environment RunLinuxDetection()
@@ -83,12 +91,18 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
                 if (inputCheck && steamCheck)
                 {
                     Debug.Log("[ENV] > Find fit environment target: " + item.Name);
-                    return new Environment(Application.platform, item.Name);
+                    var groupNames = settings.Groups
+                        .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.Linux && y.Name == item.Name))
+                        .Select(x => x.Name)
+                        .ToArray();
+                    Debug.Log("[ENV] > Find fit environment groups: " + string.Join(',', groupNames));
+
+                    return new Environment(Application.platform, item.Name, groupNames);
                 }
             }
 
             Debug.LogWarning("[ENV] Unable to find any fitting environment target");
-            return new Environment(Application.platform, null);
+            return new Environment(Application.platform, null, Array.Empty<string>());
         }
 
         private static Environment RunMacDetection()
@@ -100,12 +114,18 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
                 if (inputCheck)
                 {
                     Debug.Log("[ENV] > Find fit environment target: " + item.Name);
-                    return new Environment(Application.platform, item.Name);
+                    var groupNames = settings.Groups
+                        .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.Mac && y.Name == item.Name))
+                        .Select(x => x.Name)
+                        .ToArray();
+                    Debug.Log("[ENV] > Find fit environment groups: " + string.Join(',', groupNames));
+
+                    return new Environment(Application.platform, item.Name, groupNames);
                 }
             }
 
             Debug.LogWarning("[ENV] Unable to find any fitting environment target");
-            return new Environment(Application.platform, null);
+            return new Environment(Application.platform, null, Array.Empty<string>());
         }
 
 #if PLATFORM_ANDROID
@@ -120,12 +140,18 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
                 if (inputCheck && tvCheck)
                 {
                     Debug.Log("[ENV] > Find fit environment target: " + item.Name);
-                    return new Environment(Application.platform, item.Name);
+                    var groupNames = settings.Groups
+                        .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.Android && y.Name == item.Name))
+                        .Select(x => x.Name)
+                        .ToArray();
+                    Debug.Log("[ENV] > Find fit environment groups: " + string.Join(',', groupNames));
+                    
+                    return new Environment(Application.platform, item.Name, groupNames);
                 }
             }
 
             Debug.LogWarning("[ENV] Unable to find any fitting environment target");
-            return new Environment(Application.platform, null);
+            return new Environment(Application.platform, null, Array.Empty<string>());
         }
 #endif
 
@@ -138,19 +164,25 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
                 if (inputCheck)
                 {
                     Debug.Log("[ENV] > Find fit environment target: " + item.Name);
-                    return new Environment(Application.platform, item.Name);
+                    var groupNames = settings.Groups
+                        .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.IOS && y.Name == item.Name))
+                        .Select(x => x.Name)
+                        .ToArray();
+                    Debug.Log("[ENV] > Find fit environment groups: " + string.Join(',', groupNames));
+
+                    return new Environment(Application.platform, item.Name, groupNames);
                 }
             }
 
             Debug.LogWarning("[ENV] Unable to find any fitting environment target");
-            return new Environment(Application.platform, null);
+            return new Environment(Application.platform, null, Array.Empty<string>());
         }
 
 #if ENV_STEAM && STEAMWORKS_NET && !DISABLESTEAMWORKS
         private static bool RunSteamCheck(LinuxEnvironmentTarget item)
         {
             var steamDeckCheck = !item.RequiresSteamDeck || SteamUtils.IsSteamRunningOnSteamDeck();
-            
+
             return steamDeckCheck;
         }
 #endif
@@ -166,9 +198,10 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
         }
     }
 
-    public record Environment(RuntimePlatform Platform, string DetectedEnvironmentName)
+    public record Environment(RuntimePlatform Platform, string DetectedEnvironmentName, string[] DetectedEnvironmentGroups)
     {
         public RuntimePlatform Platform { get; } = Platform;
         public string DetectedEnvironmentName { get; } = DetectedEnvironmentName;
+        public string[] DetectedEnvironmentGroups { get; } = DetectedEnvironmentGroups;
     }
 }
