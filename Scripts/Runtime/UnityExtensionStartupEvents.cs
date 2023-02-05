@@ -14,8 +14,10 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
             AssetResourcesLoader.LoadFromResources<DebugSettings>("");
 #endif
 
+#if PCSOFT_CURSOR
             Debug.Log("Load cursor system...");
             AssetResourcesLoader.LoadFromResources<CursorSettings>("");
+#endif
         }
     }
 }

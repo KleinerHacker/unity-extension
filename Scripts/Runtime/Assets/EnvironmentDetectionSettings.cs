@@ -1,9 +1,9 @@
 using System;
+using System.Linq;
+using UnityCommonEx.Runtime.common_ex.Scripts.Runtime.Utils.Extensions;
 using UnityEditor;
 using UnityEditorEx.Runtime.editor_ex.Scripts.Runtime.Assets;
-using UnityEditorEx.Runtime.editor_ex.Scripts.Runtime.Extra;
 using UnityEngine;
-using UnityExtension.Runtime.extension.Scripts.Runtime.Types;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
 {
@@ -22,13 +22,38 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
         #region Inspector Data
 
         [SerializeField]
-        private EnvironmentConstraintItem[] items = Array.Empty<EnvironmentConstraintItem>();
+        private WindowsEnvironmentTarget[] windows = Array.Empty<WindowsEnvironmentTarget>();
+
+        [SerializeField]
+        private LinuxEnvironmentTarget[] linux = Array.Empty<LinuxEnvironmentTarget>();
+
+        [SerializeField]
+        private MacEnvironmentTarget[] mac = Array.Empty<MacEnvironmentTarget>();
+
+        [SerializeField]
+        private AndroidEnvironmentTarget[] android = Array.Empty<AndroidEnvironmentTarget>();
+
+        [SerializeField]
+        private IOSEnvironmentTarget[] ios = Array.Empty<IOSEnvironmentTarget>();
+
+        [SerializeField]
+        private EnvironmentTargetGroup[] groups = Array.Empty<EnvironmentTargetGroup>();
 
         #endregion
 
         #region Properties
 
-        public EnvironmentConstraintItem[] Items => items;
+        public WindowsEnvironmentTarget[] Windows => windows;
+
+        public LinuxEnvironmentTarget[] Linux => linux;
+
+        public MacEnvironmentTarget[] Mac => mac;
+
+        public AndroidEnvironmentTarget[] Android => android;
+
+        public IOSEnvironmentTarget[] IOS => ios;
+
+        public EnvironmentTargetGroup[] Groups => groups;
 
         #endregion
 
@@ -37,70 +62,45 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            foreach (var item in items)
+            foreach (var group in groups)
             {
-                if (string.IsNullOrWhiteSpace(item.Guid))
-                {
-                    item.Guid = Guid.NewGuid().ToString();
-                }
+                var removeList = group.Items.Where(x => Enum.GetValues(typeof(EnvironmentSupportedPlatform)).Cast<EnvironmentSupportedPlatform>().All(y => x.Platform != y));
+                var addList = Enum.GetValues(typeof(EnvironmentSupportedPlatform)).Cast<EnvironmentSupportedPlatform>().Where(x => group.Items.All(y => x != y.Platform));
+
+                group.Items = group.Items.RemoveAll(removeList.ToArray()).ToArray();
+                group.Items = group.Items.Concat(addList.Select(x => new EnvironmentTargetGroupItem { Platform = x })).ToArray();
             }
         }
 #endif
 
         #endregion
+
+        public EnvironmentTarget[] GetTargets(EnvironmentSupportedPlatform platform)
+        {
+            switch (platform)
+            {
+                case EnvironmentSupportedPlatform.Windows:
+                    return windows.Cast<EnvironmentTarget>().ToArray();
+                case EnvironmentSupportedPlatform.Linux:
+                    return linux.Cast<EnvironmentTarget>().ToArray();
+                case EnvironmentSupportedPlatform.Mac:
+                    return mac.Cast<EnvironmentTarget>().ToArray();
+                case EnvironmentSupportedPlatform.Android:
+                    return android.Cast<EnvironmentTarget>().ToArray();
+                case EnvironmentSupportedPlatform.IOS:
+                    return ios.Cast<EnvironmentTarget>().ToArray();
+                default:
+                    throw new NotImplementedException(platform.ToString());
+            }
+        }
     }
 
-    [Serializable]
-    public sealed class EnvironmentConstraintItem : IdentifiableObject
+    public enum EnvironmentSupportedPlatform
     {
-        #region Inspector Data
-
-        [SerializeField]
-        private string name;
-
-        [Space]
-        [InputDevice]
-        [Tooltip("All required input devices (AND)")]
-        [SerializeField]
-        private string[] inputs;
-
-        [Tooltip("Only available on given runtime systems (OR)")]
-        [SerializeField]
-        private EnvironmentSystemConstraintItem[] runtimeSystemItems;
-
-        #endregion
-
-        #region Properties
-
-        public string Name => name;
-
-        public string[] Inputs => inputs;
-
-        public EnvironmentSystemConstraintItem[] RuntimeSystemItems => runtimeSystemItems;
-
-        #endregion
-    }
-
-    [Serializable]
-    public sealed class EnvironmentSystemConstraintItem
-    {
-        #region Inspector Data
-
-        [SerializeField]
-        private RuntimePlatform platform;
-
-        [Header("Android / iOS")]
-        [SerializeField]
-        private bool tvRequired;
-
-        #endregion
-
-        #region Properties
-
-        public RuntimePlatform Platform => platform;
-
-        public bool TVRequired => tvRequired;
-
-        #endregion
+        Windows,
+        Linux,
+        Mac,
+        Android,
+        IOS,
     }
 }

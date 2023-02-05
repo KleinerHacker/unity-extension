@@ -20,7 +20,7 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
 
         #endregion
 
-        public CommonsProvider() : base("Project/Player/Commons", SettingsScope.Project, new List<string>() { "Commons", "Singleton" })
+        public CommonsProvider() : base("Project/Commons", SettingsScope.Project, new List<string>() { "Commons", "Singleton" })
         {
         }
 

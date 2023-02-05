@@ -1,6 +1,5 @@
-using System;
 using UnityEditor;
-using UnityEditorEx.Editor.editor_ex.Scripts.Editor.Utils.Extensions;
+using UnityEditorEx.Editor.editor_ex.Scripts.Editor.Utils;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
@@ -18,12 +17,25 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
         }
 
         #endregion
-        
+
         private SerializedObject _settings;
-        private SerializedProperty[] _itemsProperties;
-        private SerializedProperty _itemsProperty;
-        
-        public EnvironmentDetectionProvider() : base("Project/Player/Environment", SettingsScope.Project, new []{"Tooling", "Environment"})
+        private SerializedProperty _windowsProperty;
+        private SerializedProperty _linuxProperty;
+        private SerializedProperty _macProperty;
+        private SerializedProperty _androidProperty;
+        private SerializedProperty _iosProperty;
+        private SerializedProperty _groupsProperty;
+
+        private WindowsEnvironmentTargetList _windowsList;
+        private LinuxEnvironmentTargetList _linuxList;
+        private MacEnvironmentTargetList _macList;
+        private AndroidEnvironmentTargetList _androidList;
+        private IOSEnvironmentTargetList _iosList;
+        private EnvironmentTargetGroupList _groupList;
+
+        private int _tab = 0;
+
+        public EnvironmentDetectionProvider() : base("Project/Player/Environment Detection", SettingsScope.Project, new[] { "Tooling", "Environment", "Detection" })
         {
         }
 
@@ -33,76 +45,93 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
             if (_settings == null)
                 return;
 
-            _itemsProperty = _settings.FindProperty("items");
-            _itemsProperties = _settings.FindProperties("items");
+            _windowsProperty = _settings.FindProperty("windows");
+            _linuxProperty = _settings.FindProperty("linux");
+            _macProperty = _settings.FindProperty("mac");
+            _androidProperty = _settings.FindProperty("android");
+            _iosProperty = _settings.FindProperty("ios");
+            _groupsProperty = _settings.FindProperty("groups");
+
+            _windowsList = new WindowsEnvironmentTargetList(_settings, _windowsProperty);
+            _linuxList = new LinuxEnvironmentTargetList(_settings, _linuxProperty);
+            _macList = new MacEnvironmentTargetList(_settings, _macProperty);
+            _androidList = new AndroidEnvironmentTargetList(_settings, _androidProperty);
+            _iosList = new IOSEnvironmentTargetList(_settings, _iosProperty);
+            _groupList = new EnvironmentTargetGroupList(_settings, _groupsProperty);
+        }
+
+        public override void OnTitleBarGUI()
+        {
+            GUILayout.BeginVertical();
+            {
+                ExtendedEditorGUILayout.SymbolField("Activate System", "PCSOFT_ENV");
+                EditorGUI.BeginDisabledGroup(
+#if PCSOFT_ENV
+                    false
+#else
+                    true
+#endif
+                );
+                {
+                    ExtendedEditorGUILayout.SymbolField("Verbose Logging", "PCSOFT_ENV_LOGGING");
+                    ExtendedEditorGUILayout.SymbolField("Activate Steam Support", "PCSOFT_ENV_STEAM");
+                }
+                EditorGUI.EndDisabledGroup();
+            }
+            GUILayout.EndVertical();
         }
 
         public override void OnGUI(string searchContext)
         {
             _settings.Update();
-
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Environment Constraints", EditorStyles.boldLabel);
-            EditorGUILayout.Space(1f, true);
-            if (GUILayout.Button(EditorGUIUtility.IconContent("d_Toolbar Plus"), EditorStyles.iconButton))
-            {
-                AddConstraint();
-            }
-
-            if (GUILayout.Button(EditorGUIUtility.IconContent("d_Toolbar Minus"), EditorStyles.iconButton))
-            {
-                RemoveConstraint();
-            }
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.HelpBox("Setup conditions to detect a specific environment to optimize your code to interact with this environment.", MessageType.None);
-            EditorGUILayout.Space();
-
-            foreach (var itemsProperty in _itemsProperties)
-            {
-                EditorGUILayout.PropertyField(itemsProperty, new GUIContent(itemsProperty.FindPropertyRelative("name").stringValue));
-            }
             
-            _settings.ApplyModifiedProperties();
-        }
+            GUILayout.Space(15f);
 
-        private void AddConstraint()
-        {
-            _itemsProperty.InsertArrayElementAtIndex(_itemsProperty.arraySize);
-            var property = _itemsProperty.GetArrayElementAtIndex(_itemsProperty.arraySize - 1);
-            property.FindPropertyRelative("guid").stringValue = null;
-            property.FindPropertyRelative("name").stringValue = Guid.NewGuid().ToString();
-            
-            UpdateItems();
-        }
+#if PCSOFT_ENV
+            GUILayout.Label("Environment Target Groups", EditorStyles.boldLabel);
+            _groupList.DoLayoutList();
 
-        private void RemoveConstraint()
-        {
-            var genericMenu = new GenericMenu();
-            foreach (var itemsProperty in _itemsProperties)
+            GUILayout.Space(15f);
+            GUILayout.Label("Environment Target Conditions", EditorStyles.boldLabel);
+            _tab = GUILayout.Toolbar(_tab, new []
             {
-                var name = itemsProperty.FindPropertyRelative("name").stringValue;
-                genericMenu.AddItem(new GUIContent(name), false, () =>
-                {
-                    if (EditorUtility.DisplayDialog("Remove environment constraint", "You are sure to remove environment constraint '" + name + "'?", "Yes", "No"))
-                    {
-                        var indexOf = _itemsProperty.IndexOf(x => x.FindPropertyRelative("name").stringValue == name);
-                        if (indexOf >= 0)
-                        {
-                            _itemsProperty.DeleteArrayElementAtIndex(indexOf);
-                            UpdateItems();
-                        }
-                    }
-                });
+                new GUIContent(EditorGUIUtility.IconContent("BuildSettings.Metro On").image, "Windows"),
+                new GUIContent(EditorGUIUtility.IconContent("BuildSettings.Lumin On").image, "Linux"),
+                new GUIContent(EditorGUIUtility.IconContent("BuildSettings.Standalone On").image, "Mac"),
+                new GUIContent(EditorGUIUtility.IconContent("BuildSettings.Android On").image, "Android"),
+                new GUIContent(EditorGUIUtility.IconContent("BuildSettings.iPhone On").image, "IOS"),
+            });
+            switch (_tab)
+            {
+                case 0:
+                    GUILayout.Label("Windows", EditorStyles.boldLabel);
+                    _windowsList.DoLayoutList();
+                    break;
+                case 1:
+                    GUILayout.Label("Linux", EditorStyles.boldLabel);
+                    _linuxList.DoLayoutList();
+                    break;
+                case 2:
+                    GUILayout.Label("Mac", EditorStyles.boldLabel);
+                    _macList.DoLayoutList();
+                    break;
+                case 3:
+                    GUILayout.Label("Android", EditorStyles.boldLabel);
+                    _androidList.DoLayoutList();
+                    break;
+                case 4:
+                    GUILayout.Label("IOS", EditorStyles.boldLabel);
+                    _iosList.DoLayoutList();
+                    break;
+                default:
+                    EditorGUILayout.HelpBox("Unknown page", MessageType.Error);
+                    break;
             }
-            genericMenu.ShowAsContext();
-        }
+#else
+            EditorGUILayout.HelpBox("Environment Detection System is deactivated", MessageType.Info);
+#endif
 
-        private void UpdateItems()
-        {
             _settings.ApplyModifiedProperties();
-            _settings.Update();
-
-            _itemsProperties = _settings.FindProperties("items");
         }
     }
 }
