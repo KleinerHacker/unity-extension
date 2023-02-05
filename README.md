@@ -30,8 +30,9 @@ Scope: org.pcsoft
   * Add `Raycaster` to the main camera as component
   * Use `Raycaster` class to add or remove listener
   * Setup raycasts in project settings (Project/Physics/Raycast)
-* `RuntimeEnvironment` to check current environment for specific conditions, see project settings 'Project/Player/Environment'
+* `RuntimeEnvironment` to check current environment for specific conditions, see project settings 'Project/Player/Environment Detection'
   * For example to detect specific input on specific plattforms (if platform is Android and TV and a keyboard exists, handle keyboard input)
+  * Now with optional Steam support (requires Steam API)
 
 ### Singleton
 There are two singleton pattern classes: 
