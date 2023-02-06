@@ -1,9 +1,9 @@
+#if PCSOFT_CURSOR
 using UnityEngine;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Components;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime
 {
-#if PCSOFT_CURSOR
     public static class CursorSystem
     {
         public static bool IsVisible
@@ -26,5 +26,5 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 
         public static void ResetUICursor() => CursorController.Singleton.ResetUICursor();
     }
-#endif
 }
+#endif

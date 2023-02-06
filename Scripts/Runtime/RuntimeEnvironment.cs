@@ -171,7 +171,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
                     Debug.Log("[ENV] > Find fit environment target: " + item.Name);
 #endif
                     var groupName = settings.Groups
-                        .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.Android && y.Name == item.Name))
+                        .Where(x => x.Items.Any(y => y.Platform == EnvironmentSupportedPlatform.Android && y.TargetName == item.Name))
                         .Select(x => x.Name)
                         .FirstOrDefault();
 #if PCSOFT_ENV_LOGGING
