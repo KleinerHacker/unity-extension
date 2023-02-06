@@ -96,7 +96,7 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
             _tab = GUILayout.Toolbar(_tab, new []
             {
                 new GUIContent(EditorGUIUtility.IconContent("BuildSettings.Metro On").image, "Windows"),
-                new GUIContent(EditorGUIUtility.IconContent("BuildSettings.Lumin On").image, "Linux"),
+                new GUIContent(Resources.Load<Texture2D>("linux"), "Linux"),
                 new GUIContent(EditorGUIUtility.IconContent("BuildSettings.Standalone On").image, "Mac"),
                 new GUIContent(EditorGUIUtility.IconContent("BuildSettings.Android On").image, "Android"),
                 new GUIContent(EditorGUIUtility.IconContent("BuildSettings.iPhone On").image, "IOS"),

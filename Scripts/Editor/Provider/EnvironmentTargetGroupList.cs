@@ -14,7 +14,7 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
         {
             Columns.Add(new FixedColumn {Header = new GUIContent("Name", null, "Used as identifier"), AbsoluteWidth = 150f, MaxHeight = 20f, ElementCallback = NameElementCallback});
             Columns.Add(new FixedColumn {Header = new GUIContent("Windows", EditorGUIUtility.IconContent("BuildSettings.Metro On").image), AbsoluteWidth = 100f, ElementCallback = WindowsElementCallback});
-            Columns.Add(new FixedColumn {Header = new GUIContent("Linux", EditorGUIUtility.IconContent("BuildSettings.Lumin On").image), AbsoluteWidth = 100f, ElementCallback = LinuxElementCallback});
+            Columns.Add(new FixedColumn {Header = new GUIContent("Linux", Resources.Load<Texture2D>("linux")), AbsoluteWidth = 100f, ElementCallback = LinuxElementCallback});
             Columns.Add(new FixedColumn {Header = new GUIContent("Mac", EditorGUIUtility.IconContent("BuildSettings.Standalone On").image), AbsoluteWidth = 100f, ElementCallback = MacElementCallback});
             Columns.Add(new FixedColumn {Header = new GUIContent("Android", EditorGUIUtility.IconContent("BuildSettings.Android On").image), AbsoluteWidth = 100f, ElementCallback = AndroidElementCallback});
             Columns.Add(new FixedColumn {Header = new GUIContent("IOS", EditorGUIUtility.IconContent("BuildSettings.iPhone On").image), AbsoluteWidth = 100f, ElementCallback = IOSElementCallback});
