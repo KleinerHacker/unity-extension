@@ -19,7 +19,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 
         #endregion
 
-        public static RaycastHit? GetHit(string key) => RaycastHitDict[key];
+        public static RaycastHit? GetHit(string key) => !RaycastHitDict.ContainsKey(key) ? null : RaycastHitDict[key];
 
         public static void AddRaycastChanged(EventHandler<RaycasterEventArgs> e)
         {

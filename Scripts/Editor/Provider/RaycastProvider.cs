@@ -45,7 +45,7 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
             {
                 ExtendedEditorGUILayout.SymbolField("Activate System", "PCSOFT_RAYCASTER");
                 EditorGUI.BeginDisabledGroup(
-#if PCSOFT_CURSOR
+#if PCSOFT_RAYCASTER
                     false
 #else
                     true
