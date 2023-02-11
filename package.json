@@ -1,6 +1,6 @@
 {
   "name": "org.pcsoft.extension",
-  "version": "1.9.2",
+  "version": "1.10.0",
   "displayName": "Unity Extension",
   "description": "Extension for Unity itself.",
   "unity": "2021.3",

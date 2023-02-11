@@ -10,7 +10,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
     [AddComponentMenu(UnityExtensionConstants.Root + "/Raycaster")]
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Camera))]
-    public sealed class RaycasterController : MonoBehaviour
+    public sealed partial class RaycasterController : MonoBehaviour
     {
         #region Inspector Data
 
@@ -38,7 +38,13 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
                     if (raycastItem == null)
                         throw new InvalidOperationException("Key '" + x + "' not found as raycaster!");
 
-                    return new RaycastInstance(raycastItem);
+                    return raycastItem.Type switch
+                    {
+                        RaycastType.Physics3D => (RaycastInstance) new RaycastInstancePhysics3D(raycastItem),
+                        RaycastType.Physics2D => (RaycastInstance) new RaycastInstancePhysics2D(raycastItem),
+                        RaycastType.UI => (RaycastInstance) new RaycastInstanceUI(raycastItem),
+                        _ => throw new NotImplementedException(raycastItem.Type.ToString())
+                    };
                 }).ToArray();
             }
         }
@@ -49,10 +55,19 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
             if (instances.Length <= 0)
                 return;
 
-            var ray = _camera.ScreenPointToRay(Pointer.current.position.ReadValue());
-            foreach (var instance in instances)
+            var pos = Pointer.current.position.ReadValue();
+            var ray = _camera.ScreenPointToRay(pos);
+            foreach (var instance in instances.Where(x => x.Item.Offset == Vector2.zero))
             {
-                RunRaycast(ray, instance);
+                RunRaycast(pos, ray, instance);
+            }
+
+            foreach (var instance in instances.Where(x => x.Item.Offset != Vector2.zero))
+            {
+                var posOffset = Pointer.current.position.ReadValue() + instance.Item.Offset;
+                var rayOffset = _camera.ScreenPointToRay(posOffset);
+                
+                RunRaycast(posOffset, rayOffset, instance);
             }
         }
 
@@ -66,53 +81,6 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 #endif
 
         #endregion
-
-        private void RunRaycast(Ray ray, RaycastInstance instance)
-        {
-            if (Physics.Raycast(ray, out var hit, instance.Item.MaxDistance, instance.Item.LayerMask))
-            {
-                if (!instance.HasHit)
-                {
-                    instance.HasHit = true;
-                    Raycaster.RaiseRaycastChanged(this, instance.Item.Key, hit);
-                }
-                Raycaster.RaiseRaycast(this, instance.Item.Key, hit);
-            }
-            else
-            {
-                if (instance.HasHit)
-                {
-                    instance.HasHit = false;
-                    Raycaster.RaiseRaycastChanged(this, instance.Item.Key, null);
-                }
-                Raycaster.RaiseRaycast(this, instance.Item.Key, null);
-            }
-        }
-
-        private sealed class RaycastInstance
-        {
-            public RaycastItem Item { get; }
-            public bool HasHit { get; set; }
-
-            private byte _counter;
-
-            public RaycastInstance(RaycastItem item)
-            {
-                Item = item;
-            }
-
-            public bool Next()
-            {
-                _counter++;
-                if (_counter >= Item.FixedCheckCount)
-                {
-                    _counter = 0;
-                    return true;
-                }
-
-                return false;
-            }
-        }
     }
 #endif
 }
