@@ -1,5 +1,4 @@
 #if DEMO
-using System;
 using UnityEngine;
 using UnityExtension.Runtime.extension.Scripts.Runtime;
 
@@ -17,18 +16,18 @@ namespace UnityExtension.Demo.extension.Scripts.Demo
 
         private void OnEnable()
         {
-            Raycaster.AddRaycastChanged("ray2", OnRay2);
+            Raycaster.AddRaycast3DChanged("ray2", OnRay2);
         }
 
         private void OnDisable()
         {
-            Raycaster.RemoveRaycastChanged("ray2", OnRay2);
+            Raycaster.RemoveRaycast3DChanged("ray2", OnRay2);
         }
 
-        private void OnRay2(object sender, RaycasterEventArgs e)
+        private void OnRay2(object sender, RaycasterEventArgs<RaycastHit> e)
         {
-            Debug.Log("OnRay2: " + e.Hit.HasValue);
-            _renderer.material.color = e.Hit.HasValue ? Color.green : Color.white;
+            Debug.Log("OnRay2: " + (e.Hits.Length > 0));
+            _renderer.material.color = e.Hits.Length > 0 ? Color.green : Color.white;
         }
     }
 }
