@@ -54,10 +54,10 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
                 {
                     ExtendedEditorGUILayout.SymbolFieldLeft("Activate System", "PCSOFT_DRAGDROP");
                     EditorGUI.BeginDisabledGroup(
-#if PCSOFT_HOVER
+#if PCSOFT_DRAGDROP
                         false
 #else
-                    true
+                        true
 #endif
                     );
                     {
