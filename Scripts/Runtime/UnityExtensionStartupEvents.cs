@@ -26,8 +26,14 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
             Debug.Log("Load cursor system...");
             AssetResourcesLoader.LoadFromResources<CursorSettings>("");
 #endif
+
+#if PCSOFT_DRAGDROP
+            Debug.Log("Load drag drop system");
+            AssetResourcesLoader.LoadFromResources<DragDropSettings>("");
+#endif
         }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         public static void LateInitialize()
         {
 #if PCSOFT_RAYCASTER && PCSOFT_HOVER

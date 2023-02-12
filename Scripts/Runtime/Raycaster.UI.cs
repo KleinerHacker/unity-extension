@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if PCSOFT_RAYCASTER
+using System;
 using System.Collections.Generic;
 using UnityCommonEx.Runtime.common_ex.Scripts.Runtime.Utils.Extensions;
 using UnityEngine;
@@ -116,3 +117,4 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
         }
     }
 }
+#endif

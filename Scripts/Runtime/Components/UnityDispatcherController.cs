@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton;
-using UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton.Attributes;
+using UnityBase.Runtime.@base.Scripts.Runtime.Components.Singleton;
+using UnityBase.Runtime.@base.Scripts.Runtime.Components.Singleton.Attributes;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 {

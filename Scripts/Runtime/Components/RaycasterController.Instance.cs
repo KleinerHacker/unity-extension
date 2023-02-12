@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
+using UnityExtension.Runtime.extension.Scripts.Runtime.Utils.Extensions;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 {
@@ -9,7 +11,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
         private abstract class RaycastInstance
         {
             public RaycastItem Item { get; }
-            public abstract byte HitCount { get; }
+            public byte HitCount { get; set; }
 
             private byte _counter;
 
@@ -34,7 +36,6 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
         private abstract class RaycastInstance<T> : RaycastInstance
         {
             public T[] Hits { get; internal set; }
-            public override byte HitCount => (byte)Hits.Length;
 
             protected RaycastInstance(RaycastItem item) : base(item)
             {
