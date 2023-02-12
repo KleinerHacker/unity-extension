@@ -28,6 +28,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 #endif
         }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         public static void LateInitialize()
         {
 #if PCSOFT_RAYCASTER && PCSOFT_HOVER

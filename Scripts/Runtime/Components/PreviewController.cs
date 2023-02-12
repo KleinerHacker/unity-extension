@@ -1,9 +1,9 @@
 using System;
+using UnityBase.Runtime.@base.Scripts.Runtime.Components.Singleton;
+using UnityBase.Runtime.@base.Scripts.Runtime.Components.Singleton.Attributes;
 using UnityCommonEx.Runtime.common_ex.Scripts.Runtime.Utils.Extensions;
 using UnityEngine;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
-using UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton;
-using UnityExtension.Runtime.extension.Scripts.Runtime.Components.Singleton.Attributes;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 {
