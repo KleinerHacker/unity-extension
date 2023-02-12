@@ -1,11 +1,9 @@
 ﻿#if PCSOFT_RAYCASTER
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
-using UnityExtension.Runtime.extension.Scripts.Runtime.Utils.Extensions;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 {
@@ -45,10 +43,10 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
             if (hitCount != instance.HitCount)
             {
                 instance.HitCount = (byte)hitCount;
-                Raycaster.RaiseRaycast3DChanged(this, instance.Item.Key, raycastHits);
+                Raycaster.RaiseRaycast3DChanged(this, instance.Item.Key, raycastHits, hitCount);
             }
 
-            Raycaster.RaiseRaycast3D(this, instance.Item.Key, raycastHits);
+            Raycaster.RaiseRaycast3D(this, instance.Item.Key, raycastHits, hitCount);
         }
 
         private void RunRaycastPhysics2D(Ray ray, RaycastInstance instance)
@@ -67,10 +65,10 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
             if (hitCount != instance.HitCount)
             {
                 instance.HitCount = (byte)hitCount;
-                Raycaster.RaiseRaycast2DChanged(this, instance.Item.Key, raycastHits);
+                Raycaster.RaiseRaycast2DChanged(this, instance.Item.Key, raycastHits, hitCount);
             }
 
-            Raycaster.RaiseRaycast2D(this, instance.Item.Key, raycastHits);
+            Raycaster.RaiseRaycast2D(this, instance.Item.Key, raycastHits, hitCount);
         }
 
         private void RunRaycastUI(Vector2 pointer, RaycastInstance instance)
