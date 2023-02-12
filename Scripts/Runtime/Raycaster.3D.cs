@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if PCSOFT_RAYCASTER
+using System;
 using System.Collections.Generic;
 using UnityCommonEx.Runtime.common_ex.Scripts.Runtime.Utils.Extensions;
 using UnityEngine;
@@ -18,12 +19,12 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 
         #endregion
         
-        public static RaycastHit[] GetAll3DHits(string key) => !Raycast3DHitDict.ContainsKey(key) ? null : Raycast3DHitDict[key];
+        public static RaycastHit[] GetAll3DHits(string key) => !Raycast3DHitDict.ContainsKey(key) ? Array.Empty<RaycastHit>() : Raycast3DHitDict[key];
 
         public static RaycastHit? GetFirst3DHit(string key)
         {
             var hits = GetAll3DHits(key);
-            return hits is not { Length: > 0 } ? hits[0] : null;
+            return hits is { Length: > 0 } ? hits[0] : null;
         }
 
         public static void AddRaycast3DChanged(EventHandler<RaycasterEventArgs<RaycastHit>> e)
@@ -115,3 +116,4 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
         }
     }
 }
+#endif

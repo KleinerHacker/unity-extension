@@ -1,3 +1,4 @@
+#if PCSOFT_RAYCASTER && PCSOFT_PREVIEW
 using System;
 using UnityBase.Runtime.@base.Scripts.Runtime.Components.Singleton;
 using UnityBase.Runtime.@base.Scripts.Runtime.Components.Singleton.Attributes;
@@ -80,3 +81,4 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
     }
 #endif
 }
+#endif

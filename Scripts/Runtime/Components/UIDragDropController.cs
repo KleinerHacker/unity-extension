@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if PCSOFT_DRAGDROP && PCSOFT_RAYCASTER
+using System;
 using UnityBase.Runtime.@base.Scripts.Runtime.Components.Singleton.Attributes;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -91,3 +92,4 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
         }
     }
 }
+#endif
