@@ -1,6 +1,9 @@
 ﻿#if PCSOFT_RAYCASTER
 using System;
 using System.Collections.Generic;
+#if PCSOFT_RAYCASTER_LOGGING
+using UnityEngine;
+#endif
 using UnityEngine.EventSystems;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Types;
 
