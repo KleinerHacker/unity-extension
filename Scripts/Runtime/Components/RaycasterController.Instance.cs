@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
-using UnityExtension.Runtime.extension.Scripts.Runtime.Utils.Extensions;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 {

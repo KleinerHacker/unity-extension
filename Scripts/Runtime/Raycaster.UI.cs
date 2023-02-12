@@ -1,9 +1,8 @@
 ﻿#if PCSOFT_RAYCASTER
 using System;
 using System.Collections.Generic;
-using UnityCommonEx.Runtime.common_ex.Scripts.Runtime.Utils.Extensions;
-using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityExtension.Runtime.extension.Scripts.Runtime.Types;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime
 {
@@ -11,7 +10,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
     {
         private static readonly IDictionary<string, EventHandler<RaycasterEventArgs<RaycastResult>>> RaycastUIChangedDict = new Dictionary<string, EventHandler<RaycasterEventArgs<RaycastResult>>>();
         private static readonly IDictionary<string, EventHandler<RaycasterEventArgs<RaycastResult>>> RaycastUIDict = new Dictionary<string, EventHandler<RaycasterEventArgs<RaycastResult>>>();
-        private static readonly IDictionary<string, RaycastResult[]> RaycastUIHitDict = new Dictionary<string, RaycastResult[]>();
+        private static readonly IDictionary<string, DynamicRaycastList<RaycastResult>> RaycastUIHitDict = new Dictionary<string, DynamicRaycastList<RaycastResult>>();
 
         #region Events
 
@@ -19,13 +18,13 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
         private static event EventHandler<RaycasterEventArgs<RaycastResult>> OnRaycastUI;
 
         #endregion
-        
-        public static RaycastResult[] GetAllUIHits(string key) => !RaycastUIHitDict.ContainsKey(key) ? null : RaycastUIHitDict[key];
+
+        public static RaycastResult[] GetAllUIHits(string key) => !RaycastUIHitDict.ContainsKey(key) ? Array.Empty<RaycastResult>() : RaycastUIHitDict[key].Array;
 
         public static RaycastResult? GetFirstUIHit(string key)
         {
             var hits = GetAllUIHits(key);
-            return hits is not { Length: > 0 } ? hits[0] : null;
+            return hits.Length > 0 ? hits[0] : null;
         }
 
         public static void AddRaycastUIChanged(EventHandler<RaycasterEventArgs<RaycastResult>> e)
@@ -93,14 +92,20 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 #if PCSOFT_RAYCASTER_LOGGING
             Debug.Log("[RAYCASTER UI] Raise Raycast Change for " + key);
 #endif
-            RaycastUIHitDict.AddOrOverwrite(key, hits);
+
+            if (!RaycastUIHitDict.ContainsKey(key))
+            {
+                RaycastUIHitDict.Add(key, new DynamicRaycastList<RaycastResult>());
+            }
+
+            RaycastUIHitDict[key].SetContent(hits);
 
             if (RaycastUIChangedDict.ContainsKey(key))
             {
-                RaycastUIChangedDict[key].Invoke(sender, new RaycasterEventArgs<RaycastResult>(key, hits));
+                RaycastUIChangedDict[key].Invoke(sender, new RaycasterEventArgs<RaycastResult>(key, hits, hits.Length));
             }
 
-            OnRaycastUIChanged?.Invoke(sender, new RaycasterEventArgs<RaycastResult>(key, hits));
+            OnRaycastUIChanged?.Invoke(sender, new RaycasterEventArgs<RaycastResult>(key, hits, hits.Length));
         }
 
         internal static void RaiseRaycastUI(object sender, string key, RaycastResult[] hits)
@@ -110,10 +115,10 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
 #endif
             if (RaycastUIDict.ContainsKey(key))
             {
-                RaycastUIDict[key].Invoke(sender, new RaycasterEventArgs<RaycastResult>(key, hits));
+                RaycastUIDict[key].Invoke(sender, new RaycasterEventArgs<RaycastResult>(key, hits, hits.Length));
             }
 
-            OnRaycastUI?.Invoke(sender, new RaycasterEventArgs<RaycastResult>(key, hits));
+            OnRaycastUI?.Invoke(sender, new RaycasterEventArgs<RaycastResult>(key, hits, hits.Length));
         }
     }
 }
