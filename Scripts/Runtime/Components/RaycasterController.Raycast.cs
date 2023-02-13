@@ -78,7 +78,8 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 
             var pointerEvent = new PointerEventData(EventSystem.current)
             {
-                position = pointer
+                position = pointer,
+                delta = Vector2.one * 100f
             };
             var resultList = new List<RaycastResult>();
             EventSystem.current.RaycastAll(pointerEvent, resultList);
@@ -86,12 +87,12 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 
 #if PCSOFT_RAYCASTER_LOGGING
             Debug.Log("[RAYCASTER] <UI> raycast result, hits: " + results.Length +
-                      ", change: " + (resultList.Count != instance.HitCount));
+                      ", change: " + (results.Length != instance.HitCount));
 #endif
 
-            if (resultList.Count != instance.HitCount)
+            if (results.Length != instance.HitCount)
             {
-                instance.HitCount = (byte)resultList.Count;
+                instance.HitCount = (byte)results.Length;
                 ((RaycastInstanceUI)instance).Hits = results;
                 Raycaster.RaiseRaycastUIChanged(this, instance.Item.Key, results);
             }

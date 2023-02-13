@@ -13,51 +13,59 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
     {
         private void HandleDrop()
         {
-            var raycasterInfo = DragDropSettings.Singleton.GetSecondaryRaycasterInfo();
-            var dropTarget = raycasterInfo.Type switch
+            foreach (var dragDropItem in DragDropSettings.Singleton.Items)
             {
-                RaycastType.Physics3D => HandleDrop(false, Raycaster.GetFirst3DHit, hit => hit.collider.FindComponent<IPointerDropTarget>()),
-                RaycastType.Physics2D => HandleDrop(false, Raycaster.GetFirst2DHit, hit => hit.collider.FindComponent<IPointerDropTarget>()),
-                RaycastType.UI => HandleDrop(false, Raycaster.GetFirstUIHit, hit => hit.gameObject.FindComponent<IPointerDropTarget>()),
-                _ => throw new NotImplementedException(raycasterInfo.Type.ToString())
-            };
+                var dragDropInfo = _dragDropList.ContainsKey(dragDropItem.Name) ? _dragDropList[dragDropItem.Name] : null;
 
-            if (dropTarget != null)
-            {
+                var raycasterInfo = dragDropItem.GetSecondaryRaycasterInfo();
+                var dropTarget = raycasterInfo.Type switch
+                {
+                    RaycastType.Physics3D => HandleDrop(false, dragDropItem.Name, raycasterInfo, dragDropInfo,
+                        Raycaster.GetFirst3DHit, hit => hit.collider.FindComponent<IPointerDropTarget>()),
+                    RaycastType.Physics2D => HandleDrop(false, dragDropItem.Name, raycasterInfo, dragDropInfo,
+                        Raycaster.GetFirst2DHit, hit => hit.collider.FindComponent<IPointerDropTarget>()),
+                    RaycastType.UI => HandleDrop(false, dragDropItem.Name, raycasterInfo, dragDropInfo,
+                        Raycaster.GetFirstUIHit, hit => hit.gameObject.FindComponent<IPointerDropTarget>()),
+                    _ => throw new NotImplementedException(raycasterInfo.Type.ToString())
+                };
+
+                if (dropTarget != null)
+                {
 #if PCSOFT_DRAGDROP_LOGGING
-                Debug.Log("[DRAG-DROP] Finish", (Object)dropTarget);
+                    Debug.Log("[DRAG-DROP] <" + dragDropItem.Name + "> Finish", (Object)dropTarget);
 #endif
 
-                dropTarget.OnDrop(_dragDrop?.data);
+                    dropTarget.OnDrop(dragDropInfo?.Data);
 
-                _dragDrop?.dragStart.OnDropSuccessfully(dropTarget);
-                DropSuccessfully?.Invoke(this, new DropEventArgs(dropTarget, _dragDrop?.data));
-            }
-            else
-            {
+                    dragDropInfo?.DragSource.OnDropSuccessfully(dropTarget);
+                    DropSuccessfully?.Invoke(this, new DropEventArgs(dragDropItem.Name, dropTarget, dragDropInfo?.Data));
+                }
+                else
+                {
 #if PCSOFT_DRAGDROP_LOGGING
-                Debug.Log("[DRAG-DROP] Finish failed, drop is canceled");
+                    Debug.Log("[DRAG-DROP] <" + dragDropItem.Name + "> Finish failed, drop is canceled");
 #endif
 
-                _dragDrop?.dragStart.OnDropCanceled();
-                DropCanceled?.Invoke(this, new DropEventArgs(null, _dragDrop?.data));
-            }
+                    dragDropInfo?.DragSource.OnDropCanceled();
+                    DropCanceled?.Invoke(this, new DropEventArgs(dragDropItem.Name, null, dragDropInfo?.Data));
+                }
 
-            _currentDropTarget?.OnDropExit();
-            _currentDropTarget = null;
-            _dragDrop = null;
+                _currentDropTarget?.OnDropExit();
+                _currentDropTarget = null;
+                _dragDropList.Remove(dragDropItem.Name);
+            }
         }
 
-        private IPointerDropTarget HandleDrop<T>(bool moving, Func<string, T?> getHit, Func<T, IPointerDropTarget> getDropTarget) where T : struct
+        private IPointerDropTarget HandleDrop<T>(bool moving, string dragDropName, RaycastItem raycastItem, DragDropInfo dragDropInfo, Func<string, T?> getHit, Func<T, IPointerDropTarget> getDropTarget) where T : struct
         {
-            var hit = getHit(DragDropSettings.Singleton.GetSecondaryRaycasterReference());
+            var hit = getHit(raycastItem.Key);
             if (hit != null)
             {
                 var result = getDropTarget(hit.Value);
-                if (result != null && !result.AcceptType(_dragDrop?.data.GetType()))
+                if (result != null && !result.Accept(dragDropName, dragDropInfo?.Data.GetType()))
                 {
 #if PCSOFT_DRAGDROP_LOGGING
-                    Debug.Log(moving ? "[DRAG-DROP] Moving over other" : "[DRAG-DROP] Finish failed, not accepted");
+                    Debug.Log("[DRAG-DROP] <" + dragDropName + "> " + (moving ? "Moving over other" : "Finish failed, not accepted"));
 #endif
                     return null;
                 }
@@ -65,11 +73,11 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 #if PCSOFT_DRAGDROP_LOGGING
                 if (result != null)
                 {
-                    Debug.Log(moving ? "[DRAG-DROP] Moving over accepted" : "[DRAG-DROP] Finish, accepted");
+                    Debug.Log("[DRAG-DROP] <" + dragDropName + "> " + (moving ? "Moving over accepted" : "Finish, accepted"));
                 }
                 else
                 {
-                    Debug.Log(moving ? "[DRAG-DROP] Moving outside" : "[DRAG-DROP] Nothing to finish");
+                    Debug.Log("[DRAG-DROP] <" + dragDropName + "> " + (moving ? "Moving outside" : "Nothing to finish"));
                 }
 #endif
 
@@ -77,7 +85,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
             }
 
 #if PCSOFT_DRAGDROP_LOGGING
-            Debug.Log(moving ? "[DRAG-DROP] Moving outside" : "[DRAG-DROP] Nothing to finish");
+            Debug.Log("[DRAG-DROP] <" + dragDropName + "> " + (moving ? "Moving outside, no hit" : " Nothing to finish, no hit"));
 #endif
 
             return null;

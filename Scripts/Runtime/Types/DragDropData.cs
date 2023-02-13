@@ -2,9 +2,9 @@
 {
     public abstract class DragDropData
     {
-        public IPointerDragStart Source { get; }
+        public IPointerDragSource Source { get; }
 
-        protected DragDropData(IPointerDragStart source)
+        protected DragDropData(IPointerDragSource source)
         {
             Source = source;
         }

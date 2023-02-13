@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using System;
+using System.Linq;
+using UnityEditor;
 using UnityEditorEx.Runtime.editor_ex.Scripts.Runtime.Assets;
 using UnityEngine;
 
@@ -16,7 +18,32 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
 
         #endregion
 
+        #region Inspector Data
+
+        [SerializeField]
+        private DragDropItem[] items = Array.Empty<DragDropItem>();
+
+        #endregion
+
         #region Properties
+
+        public DragDropItem[] Items => items.Where(x => x.Active).ToArray();
+
+        #endregion
+
+        public DragDropItem Get(string name) => Items.FirstOrDefault(x => x.Name == name);
+    }
+
+    [Serializable]
+    public sealed class DragDropItem
+    {
+        #region Inspector Data
+
+        [SerializeField]
+        private string name;
+
+        [SerializeField]
+        private bool active = true;
 
         [SerializeField]
         private string raycasterReference;
@@ -30,6 +57,10 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
         #endregion
 
         #region Properties
+
+        public string Name => name;
+
+        public bool Active => active;
 
         public string RaycasterReference => raycasterReference;
 
