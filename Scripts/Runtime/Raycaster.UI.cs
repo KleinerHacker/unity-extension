@@ -93,7 +93,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
         internal static void RaiseRaycastUIChanged(object sender, string key, RaycastResult[] hits)
         {
 #if PCSOFT_RAYCASTER_LOGGING
-            Debug.Log("[RAYCASTER UI] Raise Raycast Change for " + key);
+            Debug.Log("[RAYCASTER UI] Raise Raycast Change for " + key + ", hits: " + hits.Length);
 #endif
 
             if (!RaycastUIHitDict.ContainsKey(key))
@@ -114,7 +114,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
         internal static void RaiseRaycastUI(object sender, string key, RaycastResult[] hits)
         {
 #if PCSOFT_RAYCASTER_LOGGING
-            Debug.Log("[RAYCASTER UI] Raise Raycast for " + key);
+            Debug.Log("[RAYCASTER UI] Raise Raycast for " + key + ", hits: " + hits.Length);
 #endif
             if (RaycastUIDict.ContainsKey(key))
             {

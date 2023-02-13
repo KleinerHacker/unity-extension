@@ -1,5 +1,6 @@
 ﻿#if PCSOFT_DRAGDROP && PCSOFT_RAYCASTER
 using System;
+using System.Collections.Generic;
 using UnityBase.Runtime.@base.Scripts.Runtime.Components.Singleton.Attributes;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -13,7 +14,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
     {
         #region Properties
 
-        public bool IsDragDrop => _dragDrop != null;
+        public bool IsDragDrop => _dragDropList.Count > 0;
 
         #endregion
 
@@ -25,7 +26,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 
         #endregion
 
-        private (IPointerDragStart dragStart, DragDropData data)? _dragDrop;
+        private readonly IDictionary<string, DragDropInfo> _dragDropList = new Dictionary<string, DragDropInfo>();
         private IPointerDropTarget _currentDropTarget;
 
         private int counter = 0;
@@ -58,7 +59,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
                         }
                         finally
                         {
-                            counter = 0;   
+                            counter = 0;
                         }
                     }
                 }
@@ -66,27 +67,37 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
         }
 
         #endregion
+
+        private record DragDropInfo(IPointerDragSource DragSource, DragDropData Data)
+        {
+            public IPointerDragSource DragSource { get; } = DragSource;
+            public DragDropData Data { get; } = Data;
+        }
     }
 
     public class DragEventArgs : EventArgs
     {
-        public IPointerDragStart DragStart { get; }
+        public string Name { get; }
+        public IPointerDragSource DragSource { get; }
         public DragDropData Data { get; }
 
-        public DragEventArgs(IPointerDragStart dragStart, DragDropData data)
+        public DragEventArgs(string name, IPointerDragSource dragSource, DragDropData data)
         {
-            DragStart = dragStart;
+            Name = name;
+            DragSource = dragSource;
             Data = data;
         }
     }
 
     public class DropEventArgs : EventArgs
     {
+        public string Name { get; }
         public IPointerDropTarget DropTarget { get; }
         public DragDropData Data { get; }
 
-        public DropEventArgs(IPointerDropTarget dropTarget, DragDropData data)
+        public DropEventArgs(string name, IPointerDropTarget dropTarget, DragDropData data)
         {
+            Name = name;
             DropTarget = dropTarget;
             Data = data;
         }

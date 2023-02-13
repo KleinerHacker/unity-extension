@@ -5,7 +5,7 @@ namespace UnityExtension.Demo.extension.Scripts.Demo
 {
     public sealed class DragDropDemoData : DragDropData
     {
-        public DragDropDemoData(IPointerDragStart source) : base(source)
+        public DragDropDemoData(IPointerDragSource source) : base(source)
         {
         }
     }

@@ -12,48 +12,56 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
     {
         private void HandleDragDropMove()
         {
-            var raycasterInfo = DragDropSettings.Singleton.GetSecondaryRaycasterInfo();
-            var dropTarget = raycasterInfo.Type switch
+            foreach (var dragDropItem in DragDropSettings.Singleton.Items)
             {
-                RaycastType.Physics3D => HandleDrop(true, Raycaster.GetFirst3DHit, hit => hit.collider.FindComponent<IPointerDropTarget>()),
-                RaycastType.Physics2D => HandleDrop(true, Raycaster.GetFirst2DHit, hit => hit.collider.FindComponent<IPointerDropTarget>()),
-                RaycastType.UI => HandleDrop(true, Raycaster.GetFirstUIHit, hit => hit.gameObject.FindComponent<IPointerDropTarget>()),
-                _ => throw new NotImplementedException(raycasterInfo.Type.ToString())
-            };
+                var dragDropInfo = _dragDropList.ContainsKey(dragDropItem.Name) ? _dragDropList[dragDropItem.Name] : null;
 
-            if (dropTarget != null)
-            {
-                if (dropTarget.AcceptType(_dragDrop?.data.GetType()))
+                var raycasterInfo = dragDropItem.GetSecondaryRaycasterInfo();
+                var dropTarget = raycasterInfo.Type switch
                 {
+                    RaycastType.Physics3D => HandleDrop(true, dragDropItem.Name, raycasterInfo, dragDropInfo,
+                        Raycaster.GetFirst3DHit, hit => hit.collider.FindComponent<IPointerDropTarget>()),
+                    RaycastType.Physics2D => HandleDrop(true, dragDropItem.Name, raycasterInfo, dragDropInfo,
+                        Raycaster.GetFirst2DHit, hit => hit.collider.FindComponent<IPointerDropTarget>()),
+                    RaycastType.UI => HandleDrop(true, dragDropItem.Name, raycasterInfo, dragDropInfo,
+                        Raycaster.GetFirstUIHit, hit => hit.gameObject.FindComponent<IPointerDropTarget>()),
+                    _ => throw new NotImplementedException(raycasterInfo.Type.ToString())
+                };
+
+                if (dropTarget != null)
+                {
+                    if (dropTarget.Accept(dragDropItem.Name, dragDropInfo?.Data.GetType()))
+                    {
 #if PCSOFT_DRAGDROP_LOGGING
-                    Debug.Log("[DRAG-DROP] Move over correct target");
+                        Debug.Log("[DRAG-DROP] <" + dragDropItem.Name + "> Move over correct target");
 #endif
 
-                    if (_currentDropTarget != dropTarget)
-                    {
-                        _currentDropTarget?.OnDropExit();
+                        if (_currentDropTarget != dropTarget)
+                        {
+                            _currentDropTarget?.OnDropExit();
 
-                        dropTarget.OnDropEnter();
-                        _currentDropTarget = dropTarget;
+                            dropTarget.OnDropEnter();
+                            _currentDropTarget = dropTarget;
+                        }
+                    }
+                    else
+                    {
+#if PCSOFT_DRAGDROP_LOGGING
+                        Debug.Log("[DRAG-DROP] <" + dragDropItem.Name + "> Move over other target");
+#endif
                     }
                 }
                 else
                 {
 #if PCSOFT_DRAGDROP_LOGGING
-                    Debug.Log("[DRAG-DROP] Move over other target");
-#endif
-                }
-            }
-            else
-            {
-#if PCSOFT_DRAGDROP_LOGGING
-                Debug.Log("[DRAG-DROP] Move outside");
+                    Debug.Log("[DRAG-DROP] <" + dragDropItem.Name + "> Move outside");
 #endif
 
-                if (_currentDropTarget != null && _currentDropTarget.AcceptType(_dragDrop?.data.GetType()))
-                {
-                    _currentDropTarget.OnDropExit();
-                    _currentDropTarget = null;
+                    if (_currentDropTarget != null && _currentDropTarget.Accept(dragDropItem.Name, dragDropInfo?.Data.GetType()))
+                    {
+                        _currentDropTarget.OnDropExit();
+                        _currentDropTarget = null;
+                    }
                 }
             }
         }

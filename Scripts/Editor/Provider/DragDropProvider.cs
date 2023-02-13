@@ -21,9 +21,9 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
         #endregion
 
         private SerializedObject _serializedObject;
-        private SerializedProperty _raycasterRefProperty;
-        private SerializedProperty _secondRaycasterProperty;
-        private SerializedProperty _secondRaycasterRefProperty;
+        private SerializedProperty _itemsProperty;
+
+        private DragDropList _dragDropList;
 
         public DragDropProvider() : base("Project/Tooling/Drag Drop", SettingsScope.Project, new[] { "tooling", "drag", "drop" })
         {
@@ -35,9 +35,8 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
             if (_serializedObject == null)
                 return;
 
-            _raycasterRefProperty = _serializedObject.FindProperty("raycasterReference");
-            _secondRaycasterProperty = _serializedObject.FindProperty("useAlternativeRaycasterForMove");
-            _secondRaycasterRefProperty = _serializedObject.FindProperty("raycasterMoveReference");
+            _itemsProperty = _serializedObject.FindProperty("items");
+            _dragDropList = new DragDropList(_serializedObject, _itemsProperty);
         }
 
         public override void OnTitleBarGUI()
@@ -73,30 +72,11 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
         public override void OnGUI(string searchContext)
         {
             _serializedObject.Update();
-            
+
             GUILayout.Space(15f);
 
 #if PCSOFT_DRAGDROP && PCSOFT_RAYCASTER
-            var all = RaycastSettings.Singleton.Items.Select(x => x.Key).ToArray();
-            var primarySelected = all.IndexOf(x => x == _raycasterRefProperty.stringValue);
-            var newPrimarySelected = EditorGUILayout.Popup("Raycaster Reference", primarySelected, all);
-            if (primarySelected != newPrimarySelected)
-            {
-                _raycasterRefProperty.stringValue = newPrimarySelected < 0 ? null : all[newPrimarySelected];
-            }
-
-            EditorGUILayout.PropertyField(_secondRaycasterProperty, new GUIContent("Use other raycaster for moving"));
-            
-            EditorGUI.BeginDisabledGroup(!_secondRaycasterProperty.boolValue);
-            {
-                var secondarySelected = all.IndexOf(x => x == _secondRaycasterRefProperty.stringValue);
-                var newSecondarySelected = EditorGUILayout.Popup("Moving Raycaster Reference", secondarySelected, all);
-                if (secondarySelected != newSecondarySelected)
-                {
-                    _secondRaycasterRefProperty.stringValue = newSecondarySelected < 0 ? null : all[newSecondarySelected];
-                }
-            }
-            EditorGUI.EndDisabledGroup();
+            _dragDropList.DoLayoutList();
 #elif !PCSOFT_RAYCASTER
             EditorGUILayout.HelpBox("Raycaster System deacrivated but required", MessageType.Warning);
 #else

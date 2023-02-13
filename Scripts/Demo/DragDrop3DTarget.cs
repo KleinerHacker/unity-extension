@@ -6,7 +6,7 @@ using UnityExtension.Runtime.extension.Scripts.Runtime.Types;
 namespace UnityExtension.Demo.extension.Scripts.Demo
 {
     [RequireComponent(typeof(MeshRenderer))]
-    public sealed class DragDropTarget : MonoBehaviour, IPointerDropTarget
+    public sealed class DragDrop3DTarget : MonoBehaviour, IPointerDropTarget
     {
         private MeshRenderer _renderer;
 
@@ -16,7 +16,7 @@ namespace UnityExtension.Demo.extension.Scripts.Demo
             _renderer.material.color = Color.blue;
         }
 
-        public bool AcceptType(Type type) => type == typeof(DragDropDemoData);
+        public bool Accept(string name, Type type) => name == "3d" && type == typeof(DragDropDemoData);
 
         public void OnDrop(DragDropData data)
         {

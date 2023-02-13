@@ -13,47 +13,66 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
     {
         private void HandleDragStart()
         {
-            var raycasterInfo = DragDropSettings.Singleton.GetPrimaryRaycasterInfo();
-            var dragStart = raycasterInfo.Type switch
+            foreach (var dragDropItem in DragDropSettings.Singleton.Items)
             {
-                RaycastType.Physics3D => HandleDrag(Raycaster.GetFirst3DHit, hit => hit.collider.FindComponent<IPointerDragStart>()),
-                RaycastType.Physics2D => HandleDrag(Raycaster.GetFirst2DHit, hit => hit.collider.FindComponent<IPointerDragStart>()),
-                RaycastType.UI => HandleDrag(Raycaster.GetFirstUIHit, hit => hit.gameObject.FindComponent<IPointerDragStart>()),
-                _ => throw new NotImplementedException(raycasterInfo.Type.ToString())
-            };
+                var raycasterInfo = dragDropItem.GetPrimaryRaycasterInfo();
+                var dragStart = raycasterInfo.Type switch
+                {
+                    RaycastType.Physics3D => HandleDrag(dragDropItem.Name, raycasterInfo,
+                        Raycaster.GetFirst3DHit, hit => hit.collider.FindComponent<IPointerDragSource>()),
+                    RaycastType.Physics2D => HandleDrag(dragDropItem.Name, raycasterInfo,
+                        Raycaster.GetFirst2DHit, hit => hit.collider.FindComponent<IPointerDragSource>()),
+                    RaycastType.UI => HandleDrag(dragDropItem.Name, raycasterInfo,
+                        Raycaster.GetFirstUIHit, hit => hit.gameObject.FindComponent<IPointerDragSource>()),
+                    _ => throw new NotImplementedException(raycasterInfo.Type.ToString())
+                };
 
-            if (dragStart != null)
-            {
+                if (dragStart != null)
+                {
+                    if (!dragStart.Accept(dragDropItem.Name))
+                    {
 #if PCSOFT_DRAGDROP_LOGGING
-                Debug.Log("[DRAG-DROP] Start", (Object)dragStart);
+                        Debug.Log("[DRAG-DROP] <" + dragDropItem.Name + "> Start failed, not accepted", (Object)dragStart);
+#endif
+                        return;
+                    }
+
+#if PCSOFT_DRAGDROP_LOGGING
+                    Debug.Log("[DRAG-DROP] <" + dragDropItem.Name + "> Start", (Object)dragStart);
 #endif
 
-                dragStart.OnStartDrag(out var data);
-                _dragDrop = (dragStart, data);
+                    dragStart.OnStartDrag(out var data);
+                    if (_dragDropList.ContainsKey(dragDropItem.Name))
+                    {
+                        _dragDropList.Remove(dragDropItem.Name);
+                    }
 
-                DragStarted?.Invoke(this, new DragEventArgs(dragStart, data));
-            }
-            else
-            {
+                    _dragDropList.Add(dragDropItem.Name, new DragDropInfo(dragStart, data));
+
+                    DragStarted?.Invoke(this, new DragEventArgs(dragDropItem.Name, dragStart, data));
+                }
+                else
+                {
 #if PCSOFT_DRAGDROP_LOGGING
-                Debug.Log("[DRAG-DROP] Start failed, object is ignored");
+                    Debug.Log("[DRAG-DROP] <" + dragDropItem.Name + "> Start failed, object is ignored");
 #endif
+                }
             }
         }
 
-        private IPointerDragStart HandleDrag<T>(Func<string, T?> getHit, Func<T, IPointerDragStart> getDragStart) where T : struct
+        private IPointerDragSource HandleDrag<T>(string dragDropName, RaycastItem raycastItem, Func<string, T?> getHit, Func<T, IPointerDragSource> getDragStart) where T : struct
         {
-            var hit = getHit(DragDropSettings.Singleton.RaycasterReference);
+            var hit = getHit(raycastItem.Key);
             if (hit != null)
             {
 #if PCSOFT_DRAGDROP_LOGGING
-                Debug.Log("[DRAG-DROP] > Find hit...");
+                Debug.Log("[DRAG-DROP] <" + dragDropName + "> > Find hit...");
 #endif
                 return getDragStart(hit.Value);
             }
 
 #if PCSOFT_DRAGDROP_LOGGING
-            Debug.Log("[DRAG-DROP] > No hit...");
+            Debug.Log("[DRAG-DROP] <" + dragDropName + "> > No hit...");
 #endif
 
             return null;
