@@ -1,9 +1,10 @@
 ﻿#if PCSOFT_RAYCASTER
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
+using UnityExtension.Runtime.extension.Scripts.Runtime.Utils;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 {
@@ -32,21 +33,22 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
             if (instance.Item.OverUI && EventSystem.current.IsPointerOverGameObject())
                 return;
 
-            var raycastHits = ((RaycastInstancePhysics3D)instance).Hits;
-            var hitCount = Physics.RaycastNonAlloc(ray, raycastHits, instance.Item.MaxDistance, instance.Item.LayerMask.value);
+            var instancePhysics3D = (RaycastInstancePhysics3D)instance;
+            var hitCount = RaycastUtils.HandleRaycast3D(ray, instancePhysics3D);
+            instancePhysics3D.HitCount = (byte)hitCount; //Preset values
 
 #if PCSOFT_RAYCASTER_LOGGING
-            Debug.Log("[RAYCASTER] <Physics3D> raycast result, hits: " + hitCount +
-                      ", change: " + (hitCount != instance.HitCount));
+            Debug.Log("[RAYCASTER] <Physics3D> raycast result, hits: " + string.Join(',', instancePhysics3D.Hits.Where(x => x.collider != null).Select(x => x.collider.gameObject.name)) +
+                      ", change: " + (hitCount != instancePhysics3D.HitCount) + ", touch: " + instancePhysics3D.Item.Touch + ", dirty: " + instancePhysics3D.IsDirty);
 #endif
 
-            if (hitCount != instance.HitCount)
+            if (instancePhysics3D.IsDirty) //Is dirty by values?
             {
-                instance.HitCount = (byte)hitCount;
-                Raycaster.RaiseRaycast3DChanged(this, instance.Item.Key, raycastHits, hitCount);
+                instancePhysics3D.SubmitHits(); //Submit hit changes (IsDirty will be false)
+                Raycaster.RaiseRaycast3DChanged(this, instancePhysics3D.Item.Key, instancePhysics3D.Hits, hitCount);
             }
 
-            Raycaster.RaiseRaycast3D(this, instance.Item.Key, raycastHits, hitCount);
+            Raycaster.RaiseRaycast3D(this, instancePhysics3D.Item.Key, instancePhysics3D.Hits, hitCount);
         }
 
         private void RunRaycastPhysics2D(Ray ray, RaycastInstance instance)
@@ -54,21 +56,22 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
             if (instance.Item.OverUI && EventSystem.current.IsPointerOverGameObject())
                 return;
 
-            var raycastHits = ((RaycastInstancePhysics2D)instance).Hits;
-            var hitCount = Physics2D.RaycastNonAlloc(ray.origin, ray.direction, raycastHits, instance.Item.MaxDistance, instance.Item.LayerMask.value);
+            var instancePhysics2D = (RaycastInstancePhysics2D)instance;
+            var hitCount = RaycastUtils.HandleRaycast2D(ray, instancePhysics2D);
+            instancePhysics2D.HitCount = (byte)hitCount; //Preset values
 
 #if PCSOFT_RAYCASTER_LOGGING
-            Debug.Log("[RAYCASTER] <Physics2D> raycast result, hits: " + hitCount +
-                      ", change: " + (hitCount != instance.HitCount));
+            Debug.Log("[RAYCASTER] <Physics2D> raycast result, hits: " + string.Join(',', instancePhysics2D.Hits.Where(x => x.collider != null).Select(x => x.collider.gameObject.name)) +
+                      ", change: " + (hitCount != instancePhysics2D.HitCount) + ", touch: " + instancePhysics2D.Item.Touch + ", dirty: " + instancePhysics2D.IsDirty);
 #endif
 
-            if (hitCount != instance.HitCount)
+            if (instancePhysics2D.IsDirty) //Is dirty by values?
             {
-                instance.HitCount = (byte)hitCount;
-                Raycaster.RaiseRaycast2DChanged(this, instance.Item.Key, raycastHits, hitCount);
+                instancePhysics2D.SubmitHits(); //Submit hit changes (IsDirty will be false)
+                Raycaster.RaiseRaycast2DChanged(this, instancePhysics2D.Item.Key, instancePhysics2D.Hits, hitCount);
             }
 
-            Raycaster.RaiseRaycast2D(this, instance.Item.Key, raycastHits, hitCount);
+            Raycaster.RaiseRaycast2D(this, instancePhysics2D.Item.Key, instancePhysics2D.Hits, hitCount);
         }
 
         private void RunRaycastUI(Vector2 pointer, RaycastInstance instance)
@@ -76,24 +79,19 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
             if (instance.Item.OverUI && !EventSystem.current.IsPointerOverGameObject())
                 return;
 
-            var pointerEvent = new PointerEventData(EventSystem.current)
-            {
-                position = pointer,
-                delta = Vector2.one * 100f
-            };
-            var resultList = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(pointerEvent, resultList);
-            var results = resultList.ToArray();
+            var instanceUI = (RaycastInstanceUI)instance;
+            var results = RaycastUtils.HandleRaycastUI(pointer, instanceUI).ToArray();
+            instanceUI.HitCount = (byte)results.Length; //Preset values
+            instanceUI.Hits = results;
 
 #if PCSOFT_RAYCASTER_LOGGING
-            Debug.Log("[RAYCASTER] <UI> raycast result, hits: " + results.Length +
-                      ", change: " + (results.Length != instance.HitCount));
+            Debug.Log("[RAYCASTER] <UI> raycast result, hits: " + string.Join(',', results.Select(x => x.gameObject.name)) +
+                      ", change: " + (results.Length != instanceUI.HitCount) + ", touch: " + instanceUI.Item.Touch + ", dirty: " + instanceUI.IsDirty);
 #endif
 
-            if (results.Length != instance.HitCount)
+            if (instanceUI.IsDirty) //Is dirty by values?
             {
-                instance.HitCount = (byte)results.Length;
-                ((RaycastInstanceUI)instance).Hits = results;
+                instanceUI.SubmitHits(); //Submit hit changes (IsDirty will be false)
                 Raycaster.RaiseRaycastUIChanged(this, instance.Item.Key, results);
             }
 

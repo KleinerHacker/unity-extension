@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
 
@@ -6,7 +9,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 {
     public sealed partial class RaycasterController
     {
-        private abstract class RaycastInstance
+        internal abstract class RaycastInstance
         {
             public RaycastItem Item { get; }
             public byte HitCount { get; set; }
@@ -31,35 +34,67 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
             }
         }
 
-        private abstract class RaycastInstance<T> : RaycastInstance
+        internal abstract class RaycastInstance<T> : RaycastInstance, IEqualityComparer<T>
         {
             public T[] Hits { get; internal set; }
+
+            private T[] _lastHits = Array.Empty<T>();
+            private int _lastHitCount = 0;
+
+            public bool IsDirty => Hits.Length != _lastHits.Length || HitCount != _lastHitCount || !Hits.SequenceEqual(_lastHits, this);
 
             protected RaycastInstance(RaycastItem item) : base(item)
             {
                 Hits = new T[item.CountOfHits];
             }
+
+            public void SubmitHits()
+            {
+                _lastHits = Hits.ToArray();
+                _lastHitCount = HitCount;
+            }
+
+            public abstract bool Equals(T x, T y);
+            public abstract int GetHashCode(T obj);
         }
 
-        private sealed class RaycastInstancePhysics3D : RaycastInstance<RaycastHit>
+        internal sealed class RaycastInstancePhysics3D : RaycastInstance<RaycastHit>
         {
             public RaycastInstancePhysics3D(RaycastItem item) : base(item)
             {
             }
+
+            public override bool Equals(RaycastHit x, RaycastHit y) =>
+                (x.collider != null ? x.collider.gameObject : null) == (y.collider != null ? y.collider.gameObject : null);
+
+            public override int GetHashCode(RaycastHit obj) =>
+                obj.collider != null ? obj.collider.gameObject.GetHashCode() : 0;
         }
 
-        private sealed class RaycastInstancePhysics2D : RaycastInstance<RaycastHit2D>
+        internal sealed class RaycastInstancePhysics2D : RaycastInstance<RaycastHit2D>
         {
             public RaycastInstancePhysics2D(RaycastItem item) : base(item)
             {
             }
+
+            public override bool Equals(RaycastHit2D x, RaycastHit2D y) =>
+                (x.collider != null ? x.collider.gameObject : null) == (y.collider != null ? y.collider.gameObject : null);
+
+            public override int GetHashCode(RaycastHit2D obj) =>
+                obj.collider != null ? obj.collider.gameObject.GetHashCode() : 0;
         }
 
-        private sealed class RaycastInstanceUI : RaycastInstance<RaycastResult>
+        internal sealed class RaycastInstanceUI : RaycastInstance<RaycastResult>
         {
             public RaycastInstanceUI(RaycastItem item) : base(item)
             {
             }
+
+            public override bool Equals(RaycastResult x, RaycastResult y) =>
+                x.gameObject == y.gameObject;
+
+            public override int GetHashCode(RaycastResult obj) =>
+                obj.gameObject.GetHashCode();
         }
     }
 }

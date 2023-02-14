@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
+using UnityInputEx.Runtime.input_ex.Scripts.Runtime.Utils;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 {
@@ -10,6 +11,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
     [AddComponentMenu(UnityExtensionConstants.Root + "/Raycaster")]
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Camera))]
+    [DefaultExecutionOrder(-99999)]
     public sealed partial class RaycasterController : MonoBehaviour
     {
         #region Inspector Data
@@ -20,7 +22,12 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
         #endregion
 
         private Camera _camera;
-        private RaycastInstance[] _instances;
+        private RaycastInstance[] _regularInstances;
+        private RaycastInstance[] _offsetInstances;
+        private RaycastInstance[] _touchInstances;
+        private RaycastInstance[] _touchOffsetInstances;
+
+        private bool _alreadyTouched;
 
         #region Builtin Methods
 
@@ -32,7 +39,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 
             if (enabled)
             {
-                _instances = raycasters.Select(x =>
+                var instances = raycasters.Select(x =>
                 {
                     var raycastItem = RaycastSettings.Singleton.Items.FirstOrDefault(y => string.Equals(y.Key, x, StringComparison.Ordinal));
                     if (raycastItem == null)
@@ -40,33 +47,79 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 
                     return raycastItem.Type switch
                     {
-                        RaycastType.Physics3D => (RaycastInstance) new RaycastInstancePhysics3D(raycastItem),
-                        RaycastType.Physics2D => (RaycastInstance) new RaycastInstancePhysics2D(raycastItem),
-                        RaycastType.UI => (RaycastInstance) new RaycastInstanceUI(raycastItem),
+                        RaycastType.Physics3D => (RaycastInstance)new RaycastInstancePhysics3D(raycastItem),
+                        RaycastType.Physics2D => (RaycastInstance)new RaycastInstancePhysics2D(raycastItem),
+                        RaycastType.UI => (RaycastInstance)new RaycastInstanceUI(raycastItem),
                         _ => throw new NotImplementedException(raycastItem.Type.ToString())
                     };
                 }).ToArray();
+                _regularInstances = instances.Where(x => !x.Item.Touch && x.Item.Offset == Vector2.zero).ToArray();
+                _offsetInstances = instances.Where(x => !x.Item.Touch && x.Item.Offset != Vector2.zero).ToArray();
+                _touchInstances = instances.Where(x => x.Item.Touch && x.Item.Offset == Vector2.zero).ToArray();
+                _touchOffsetInstances = instances.Where(x => x.Item.Touch && x.Item.Offset != Vector2.zero).ToArray();
+            }
+        }
+
+        private void Update()
+        {
+            if (!InputUtils.GetValueFromDevice(Pointer.current, pointer => pointer.press.isPressed))
+            {
+                _alreadyTouched = false;
+                return;
+            }
+
+            RaycastInstance[] touchInstances;
+            RaycastInstance[] touchOffsetInstances;
+            if (_alreadyTouched)
+            {
+                touchInstances = _touchInstances.Where(x => x.Next()).ToArray();
+                touchOffsetInstances = _touchOffsetInstances.Where(x => x.Next()).ToArray();
+                if (touchInstances.Length <= 0 && touchOffsetInstances.Length <= 0)
+                    return;
+            }
+            else
+            {
+                touchInstances = _touchInstances;
+                touchOffsetInstances = _touchOffsetInstances;
+                _alreadyTouched = true;
+            }
+
+            var pos = Pointer.current.position.ReadValue();
+            var ray = _camera.ScreenPointToRay(pos);
+
+            foreach (var instance in touchInstances)
+            {
+                RunRaycast(pos, ray, instance);
+            }
+
+            foreach (var instance in touchOffsetInstances)
+            {
+                var posOffset = Pointer.current.position.ReadValue() + instance.Item.Offset;
+                var rayOffset = _camera.ScreenPointToRay(posOffset);
+
+                RunRaycast(posOffset, rayOffset, instance);
             }
         }
 
         private void FixedUpdate()
         {
-            var instances = _instances.Where(x => x.Next()).ToArray();
-            if (instances.Length <= 0)
+            var regularInstances = _regularInstances.Where(x => x.Next()).ToArray();
+            var offsetInstances = _offsetInstances.Where(x => x.Next()).ToArray();
+            if (regularInstances.Length <= 0 && offsetInstances.Length <= 0)
                 return;
 
             var pos = Pointer.current.position.ReadValue();
             var ray = _camera.ScreenPointToRay(pos);
-            foreach (var instance in instances.Where(x => x.Item.Offset == Vector2.zero))
+            foreach (var instance in regularInstances)
             {
                 RunRaycast(pos, ray, instance);
             }
 
-            foreach (var instance in instances.Where(x => x.Item.Offset != Vector2.zero))
+            foreach (var instance in offsetInstances)
             {
                 var posOffset = Pointer.current.position.ReadValue() + instance.Item.Offset;
                 var rayOffset = _camera.ScreenPointToRay(posOffset);
-                
+
                 RunRaycast(posOffset, rayOffset, instance);
             }
         }
