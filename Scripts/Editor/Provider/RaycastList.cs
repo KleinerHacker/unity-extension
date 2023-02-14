@@ -12,6 +12,7 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
             Columns.Add(new FixedColumn { HeaderText = "Layer Mask", AbsoluteWidth = 100f, ElementCallback = LayerMaskElementCallback });
             Columns.Add(new FixedColumn { HeaderText = "Raycast Type", AbsoluteWidth = 100f, ElementCallback = RaycastTypeElementCallback });
             Columns.Add(new FixedColumn { HeaderText = "Multi Hits", AbsoluteWidth = 150f, MaxHeight = 20f, ElementCallback = MultiHitsElementCallback });
+            Columns.Add(new FixedColumn { HeaderText = "Touch", AbsoluteWidth = 50f, ElementCallback = TouchElementCallback });
             Columns.Add(new FixedColumn { HeaderText = "Over UI", AbsoluteWidth = 50f, ElementCallback = OverUIElementCallback });
             Columns.Add(new FixedColumn { HeaderText = "Raycast Offset", AbsoluteWidth = 100f, ElementCallback = OffsetElementCallback });
             Columns.Add(new FixedColumn { HeaderText = "Max Dist", AbsoluteWidth = 60f, MaxHeight = 20f, ElementCallback = MaxDistanceElementCallback });
@@ -51,6 +52,13 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
             var property = serializedProperty.GetArrayElementAtIndex(i);
             var overUIProperty = property.FindPropertyRelative("overUI");
             EditorGUI.PropertyField(rect, overUIProperty, GUIContent.none);
+        }
+
+        private void TouchElementCallback(Rect rect, int i, bool isactive, bool isfocused)
+        {
+            var property = serializedProperty.GetArrayElementAtIndex(i);
+            var touchProperty = property.FindPropertyRelative("touch");
+            EditorGUI.PropertyField(rect, touchProperty, GUIContent.none);
         }
 
         private void OffsetElementCallback(Rect rect, int i, bool isactive, bool isfocused)

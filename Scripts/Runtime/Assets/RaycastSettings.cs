@@ -13,7 +13,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
         public static RaycastSettings Singleton => GetSingleton("Raycaster", "raycaster.asset");
 
 #if UNITY_EDITOR
-        public static SerializedObject SerializedSingleton =>GetSerializedSingleton("Raycaster", "raycaster.asset");
+        public static SerializedObject SerializedSingleton => GetSerializedSingleton("Raycaster", "raycaster.asset");
 #endif
 
         #endregion
@@ -39,7 +39,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
 
         [SerializeField]
         private string key;
-        
+
         [SerializeField]
         private LayerMask layerMask;
 
@@ -62,6 +62,9 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
 
         [SerializeField]
         private RaycastType type = RaycastType.Physics3D;
+
+        [SerializeField]
+        private bool touch;
 
         #endregion
 
@@ -86,6 +89,8 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
             get => type;
             set => type = value;
         }
+
+        public bool Touch => touch;
 
         #endregion
     }
