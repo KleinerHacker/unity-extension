@@ -1,9 +1,8 @@
 using System;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
-using UnityInputEx.Runtime.input_ex.Scripts.Runtime.Utils;
+using UnityExtension.Runtime.extension.Scripts.Runtime.Utils;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 {
@@ -62,7 +61,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 
         private void Update()
         {
-            if (!InputUtils.GetValueFromDevice(Pointer.current, pointer => pointer.press.isPressed))
+            if (!PointerUtils.IsPressed())
             {
                 _alreadyTouched = false;
                 return;
@@ -84,7 +83,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
                 _alreadyTouched = true;
             }
 
-            var pos = Pointer.current.position.ReadValue();
+            var pos = PointerUtils.GetPosition();
             var ray = _camera.ScreenPointToRay(pos);
 
             foreach (var instance in touchInstances)
@@ -94,7 +93,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 
             foreach (var instance in touchOffsetInstances)
             {
-                var posOffset = Pointer.current.position.ReadValue() + instance.Item.Offset;
+                var posOffset = PointerUtils.GetPosition() + instance.Item.Offset;
                 var rayOffset = _camera.ScreenPointToRay(posOffset);
 
                 RunRaycast(posOffset, rayOffset, instance);
@@ -108,7 +107,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
             if (regularInstances.Length <= 0 && offsetInstances.Length <= 0)
                 return;
 
-            var pos = Pointer.current.position.ReadValue();
+            var pos = PointerUtils.GetPosition();
             var ray = _camera.ScreenPointToRay(pos);
             foreach (var instance in regularInstances)
             {
@@ -117,7 +116,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 
             foreach (var instance in offsetInstances)
             {
-                var posOffset = Pointer.current.position.ReadValue() + instance.Item.Offset;
+                var posOffset = PointerUtils.GetPosition() + instance.Item.Offset;
                 var rayOffset = _camera.ScreenPointToRay(posOffset);
 
                 RunRaycast(posOffset, rayOffset, instance);
