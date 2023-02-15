@@ -66,6 +66,18 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
             GUILayout.Space(15f);
 
 #if PCSOFT_RAYCASTER
+            EditorGUILayout.BeginHorizontal(GUILayout.Width(300f));
+            {
+                ExtendedEditorGUILayout.SymbolFieldLeft(new GUIContent("Mouse Support", EditorGUIUtility.IconContent("d_EventTrigger Icon").image), "PCSOFT_RAYCASTER_MOUSE");
+                ExtendedEditorGUILayout.SymbolFieldLeft(new GUIContent("Touch Support", EditorGUIUtility.IconContent("d_TouchInputModule Icon").image), "PCSOFT_RAYCASTER_TOUCH");
+                ExtendedEditorGUILayout.SymbolFieldLeft(new GUIContent("Pen Support", EditorGUIUtility.IconContent("d_editicon.sml").image), "PCSOFT_RAYCASTER_PEN");
+            }
+            EditorGUILayout.EndHorizontal();
+
+#if !PCSOFT_RAYCASTER_MOUSE && !PCSOFT_RAYCASTER_PEN && !PCSOFT_RAYCASTER_TOUCH
+            EditorGUILayout.HelpBox("To use raycaster select one of the devices above.", MessageType.Warning);
+#endif
+
             if (RaycastSettings.Singleton.Items.Any(x => string.IsNullOrEmpty(x.Key)))
             {
                 EditorGUILayout.HelpBox("Some key values are empty.", MessageType.Warning);
@@ -75,7 +87,7 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
             {
                 EditorGUILayout.HelpBox("There are double key values.", MessageType.Warning);
             }
-            
+
             _raycastList.DoLayoutList();
 #else
             EditorGUILayout.HelpBox("Raycaster System deactivated", MessageType.Info);
