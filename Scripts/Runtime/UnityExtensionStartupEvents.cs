@@ -17,6 +17,11 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime
             AssetResourcesLoader.LoadFromResources<DebugSettings>("");
 #endif
 
+#if PCSOFT_RAYCASTER
+            Debug.Log("Initialize raycaster system");
+            AssetResourcesLoader.LoadFromResources<RaycastSettings>("");
+#endif
+
 #if PCSOFT_RAYCASTER && PCSOFT_PREVIEW
             Debug.Log("Initialize preview system");
             AssetResourcesLoader.LoadFromResources<PreviewSettings>("");
