@@ -1,6 +1,7 @@
 ﻿#if PCSOFT_DRAGDROP && PCSOFT_RAYCASTER
 using System;
 using System.Collections.Generic;
+using UnityBase.Runtime.@base.Scripts.Runtime.Components.Singleton;
 using UnityBase.Runtime.@base.Scripts.Runtime.Components.Singleton.Attributes;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -10,7 +11,7 @@ using UnityInputEx.Runtime.input_ex.Scripts.Runtime.Utils;
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 {
     [Singleton(Instance = SingletonInstance.RequiresNewInstance, Scope = SingletonScope.Application, CreationTime = SingletonCreationTime.Loading, ObjectName = "Drag & Drop")]
-    public sealed partial class UIDragDropController : UIBehaviour
+    public sealed partial class UIDragDropController : SingletonBehavior<UIDragDropController>
     {
         #region Properties
 
@@ -23,6 +24,8 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
         public event EventHandler<DragEventArgs> DragStarted;
         public event EventHandler<DropEventArgs> DropCanceled;
         public event EventHandler<DropEventArgs> DropSuccessfully;
+        public event EventHandler<DropEventArgs> DropEntered;
+        public event EventHandler<DropEventArgs> DropExited;
 
         #endregion
 

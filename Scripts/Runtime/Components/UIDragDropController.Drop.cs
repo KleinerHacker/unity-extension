@@ -66,6 +66,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 #endif
                 //Call callback methods on target
                 dropTarget.data.target.OnDrop(dropTarget.data.info.Data);
+                DropExited?.Invoke(this, new DropEventArgs(dropTarget.name, dropTarget.data.target, dropTarget.data.info.Data));
                 dropTarget.data.target.OnDropExit(dropTarget.data.info.Data);
 
                 //Call callback methods on start
@@ -117,7 +118,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
                     //Get drop target only from first hit
                     DragDropHitType.FirstHit => getDropTarget(hits[0]).ToSingleArray(),
                     //Get drop target only from first usage of Drop Target Interface (overlying with other)
-                    DragDropHitType.FirstTarget => hits.Select(getDropTarget).FirstOrDefault(x => x != null).ToSingleArray(),
+                    DragDropHitType.FirstTarget => hits.Select(getDropTarget).FirstOrDefault(x => x != null && dragDropInfo.Any(y => x.Accept(dragDropName, y.Data.GetType()))).ToSingleArray(),
                     //Get all drop targets with Drop Target interface (overlying with multiple targets)
                     DragDropHitType.AllTargets => hits.Select(getDropTarget).Where(x => x != null).ToArray(),
                     _ => throw new NotImplementedException(hitType.ToString())

@@ -104,7 +104,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
                     //Get only the first hit and try to get interface
                     DragDropHitType.FirstHit => getDragStart(hits[0]).ToSingleArray(),
                     //Get only the first hit with existing interface from all hits (overlying with other)
-                    DragDropHitType.FirstTarget => hits.Select(getDragStart).FirstOrDefault(x => x != null).ToSingleArray(),
+                    DragDropHitType.FirstTarget => hits.Select(getDragStart).FirstOrDefault(x => x != null && x.Accept(dragDropName)).ToSingleArray(),
                     //Get all hits with existing interface (overlying with multiple starts)
                     DragDropHitType.AllTargets => hits.Select(getDragStart).Where(x => x != null).ToArray(),
                     _ => throw new NotImplementedException(hitType.ToString())
