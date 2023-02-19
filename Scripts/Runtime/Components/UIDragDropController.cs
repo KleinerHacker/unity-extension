@@ -14,7 +14,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
     {
         #region Properties
 
-        public bool IsDragDrop => _dragDropList.Count > 0;
+        public bool IsDragDrop => _dragStartList.Count > 0;
 
         #endregion
 
@@ -26,8 +26,11 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 
         #endregion
 
-        private readonly IDictionary<string, DragDropInfo> _dragDropList = new Dictionary<string, DragDropInfo>();
-        private IPointerDropTarget _currentDropTarget;
+        //Stores all drag start / data info
+        private readonly IDictionary<string, List<DragDropInfo>> _dragStartList = new Dictionary<string, List<DragDropInfo>>();
+
+        //Stores current potential drop targets
+        private readonly List<IPointerDropTarget> _currentDropTargets = new List<IPointerDropTarget>();
 
         private int counter = 0;
 

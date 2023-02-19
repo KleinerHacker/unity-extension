@@ -1,6 +1,8 @@
 using UnityEditor;
 using UnityEditorEx.Editor.editor_ex.Scripts.Editor;
+using UnityEditorEx.Editor.editor_ex.Scripts.Editor.Utils.Extensions;
 using UnityEngine;
+using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
 
 namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
 {
@@ -72,7 +74,13 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
         {
             var property = serializedProperty.GetArrayElementAtIndex(i);
             var distanceProperty = property.FindPropertyRelative("maxDistance");
-            EditorGUI.PropertyField(rect, distanceProperty, GUIContent.none);
+            var typeProperty = property.FindPropertyRelative("type");
+
+            EditorGUI.BeginDisabledGroup(typeProperty.GetEnum<RaycastType>() == RaycastType.UI);
+            {
+                EditorGUI.PropertyField(rect, distanceProperty, GUIContent.none);
+            }
+            EditorGUI.EndDisabledGroup();
         }
 
         private void UpdateCountElementCallback(Rect rect, int i, bool isactive, bool isfocused)

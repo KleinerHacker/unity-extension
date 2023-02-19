@@ -36,13 +36,13 @@ namespace UnityExtension.Demo.extension.Scripts.Demo
             _isDrag = true;
         }
 
-        public void OnDropCanceled()
+        public void OnDropCanceled(DragDropData data)
         {
             image.gameObject.SetActive(false);
             _isDrag = false;
         }
 
-        public void OnDropSuccessfully(IPointerDropTarget target)
+        public void OnDropSuccessfully(IPointerDropTarget target, DragDropData data)
         {
             image.gameObject.SetActive(false);
             _isDrag = false;

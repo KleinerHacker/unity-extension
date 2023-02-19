@@ -38,7 +38,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
             instancePhysics3D.HitCount = (byte)hitCount; //Preset values
 
 #if PCSOFT_RAYCASTER_LOGGING
-            Debug.Log("[RAYCASTER] <Physics3D> raycast result, hits: " + string.Join(',', instancePhysics3D.Hits.Where(x => x.collider != null).Select(x => x.collider.gameObject.name)) +
+            Debug.Log("[RAYCASTER] <Physics3D> raycast result, hits: " + string.Join(',', instancePhysics3D.Hits.Take(hitCount).Select(x => x.collider.gameObject.name)) +
                       ", change: " + (hitCount != instancePhysics3D.HitCount) + ", touch: " + instancePhysics3D.Item.Touch + ", dirty: " + instancePhysics3D.IsDirty);
 #endif
 
@@ -61,7 +61,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
             instancePhysics2D.HitCount = (byte)hitCount; //Preset values
 
 #if PCSOFT_RAYCASTER_LOGGING
-            Debug.Log("[RAYCASTER] <Physics2D> raycast result, hits: " + string.Join(',', instancePhysics2D.Hits.Where(x => x.collider != null).Select(x => x.collider.gameObject.name)) +
+            Debug.Log("[RAYCASTER] <Physics2D> raycast result, hits: " + string.Join(',', instancePhysics2D.Hits.Take(hitCount).Select(x => x.collider.gameObject.name)) +
                       ", change: " + (hitCount != instancePhysics2D.HitCount) + ", touch: " + instancePhysics2D.Item.Touch + ", dirty: " + instancePhysics2D.IsDirty);
 #endif
 
