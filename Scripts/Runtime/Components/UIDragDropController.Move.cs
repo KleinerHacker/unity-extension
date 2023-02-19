@@ -71,6 +71,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
                 {
                     foreach (var info in _dragStartList[key])
                     {
+                        DropExited?.Invoke(this, new DropEventArgs(key, dropTarget, info.Data));
                         dropTarget.OnDropExit(info.Data);
                     }
                 }
@@ -82,6 +83,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
 #if PCSOFT_DRAGDROP_LOGGING
                 Debug.Log("[DRAG-DROP] Move over target, entered");
 #endif
+                DropEntered?.Invoke(this, new DropEventArgs(target.name, target.data.target, target.data.info.Data));
                 target.data.target.OnDropEnter(target.data.info.Data);
             }
 
