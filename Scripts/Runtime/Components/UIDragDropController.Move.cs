@@ -1,6 +1,9 @@
 ﻿#if PCSOFT_DRAGDROP && PCSOFT_RAYCASTER
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityBase.Runtime.@base.Scripts.Runtime.Utils.Extensions;
+using UnityCommonEx.Runtime.common_ex.Scripts.Runtime.Utils.Extensions;
 using UnityEngine;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
 using UnityExtension.Runtime.extension.Scripts.Runtime.Types;
@@ -12,58 +15,79 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
     {
         private void HandleDragDropMove()
         {
+            var dropTargets = new List<(string name, (IPointerDropTarget target, DragDropInfo info)[] data)>();
             foreach (var dragDropItem in DragDropSettings.Singleton.Items)
             {
-                var dragDropInfo = _dragDropList.ContainsKey(dragDropItem.Name) ? _dragDropList[dragDropItem.Name] : null;
+                //Try get drag drop info
+                var dragDropInfo = _dragStartList.ContainsKey(dragDropItem.Name) ? _dragStartList[dragDropItem.Name] : new List<DragDropInfo>();
 
                 var raycasterInfo = dragDropItem.GetSecondaryRaycasterInfo();
-                var dropTarget = raycasterInfo.Type switch
-                {
-                    RaycastType.Physics3D => HandleDrop(true, dragDropItem.Name, raycasterInfo, dragDropInfo,
-                        Raycaster.GetFirst3DHit, hit => hit.collider.FindComponent<IPointerDropTarget>()),
-                    RaycastType.Physics2D => HandleDrop(true, dragDropItem.Name, raycasterInfo, dragDropInfo,
-                        Raycaster.GetFirst2DHit, hit => hit.collider.FindComponent<IPointerDropTarget>()),
-                    RaycastType.UI => HandleDrop(true, dragDropItem.Name, raycasterInfo, dragDropInfo,
-                        Raycaster.GetFirstUIHit, hit => hit.gameObject.FindComponent<IPointerDropTarget>()),
-                    _ => throw new NotImplementedException(raycasterInfo.Type.ToString())
-                };
+                if (raycasterInfo == null)
+                    throw new InvalidOperationException("Raycaster not found: " + dragDropItem.GetSecondaryRaycasterReference());
 
-                if (dropTarget != null)
-                {
-                    if (dropTarget.Accept(dragDropItem.Name, dragDropInfo?.Data.GetType()))
+                //Get all drop targets
+                dropTargets.Add((
+                    dragDropItem.Name,
+                    raycasterInfo.Type switch
                     {
-#if PCSOFT_DRAGDROP_LOGGING
-                        Debug.Log("[DRAG-DROP] <" + dragDropItem.Name + "> Move over correct target");
-#endif
-
-                        if (_currentDropTarget != dropTarget)
-                        {
-                            _currentDropTarget?.OnDropExit();
-
-                            dropTarget.OnDropEnter();
-                            _currentDropTarget = dropTarget;
-                        }
+                        RaycastType.Physics3D => HandleDrop(true, dragDropItem.Name, dragDropItem.HitType, raycasterInfo, dragDropInfo,
+                            key => dragDropItem.HitType == DragDropHitType.FirstHit ? Raycaster.GetFirst3DHit(key).ToSingleArray() : Raycaster.GetAll3DHits(key),
+                            hit => hit.collider.FindComponent<IPointerDropTarget>()),
+                        RaycastType.Physics2D => HandleDrop(true, dragDropItem.Name, dragDropItem.HitType, raycasterInfo, dragDropInfo,
+                            key => dragDropItem.HitType == DragDropHitType.FirstHit ? Raycaster.GetFirst2DHit(key).ToSingleArray() : Raycaster.GetAll2DHits(key),
+                            hit => hit.collider.FindComponent<IPointerDropTarget>()),
+                        RaycastType.UI => HandleDrop(true, dragDropItem.Name, dragDropItem.HitType, raycasterInfo, dragDropInfo,
+                            key => dragDropItem.HitType == DragDropHitType.FirstHit ? Raycaster.GetFirstUIHit(key).ToSingleArray() : Raycaster.GetAllUIHits(key),
+                            hit => hit.gameObject.FindComponent<IPointerDropTarget>()),
+                        _ => throw new NotImplementedException(raycasterInfo.Type.ToString())
                     }
-                    else
-                    {
-#if PCSOFT_DRAGDROP_LOGGING
-                        Debug.Log("[DRAG-DROP] <" + dragDropItem.Name + "> Move over other target");
-#endif
-                    }
-                }
-                else
-                {
-#if PCSOFT_DRAGDROP_LOGGING
-                    Debug.Log("[DRAG-DROP] <" + dragDropItem.Name + "> Move outside");
-#endif
+                ));
+            } //For all drag drop systems!
 
-                    if (_currentDropTarget != null && _currentDropTarget.Accept(dragDropItem.Name, dragDropInfo?.Data.GetType()))
+            //Start handling on all results from above over all drag drop systems
+
+            //All accepted drop targets
+            var successDropTargets = dropTargets
+                .SelectMany(x => x.data, (x, data) => (x.name, data))
+                .Where(x => x.data.target.Accept(x.name, x.data.info.Data.GetType()))
+                .ToArray();
+
+            //Drop targets that was leave
+            var removedTargets = _currentDropTargets
+                .Where(x => successDropTargets.All(y => x != y.data.target))
+                .ToArray();
+            //Drop targets that was entered
+            var addedTargets = successDropTargets
+                .Where(x => _currentDropTargets.All(y => x.data.target != y))
+                .ToArray();
+
+            //Call on leaved targets callback method exit
+            foreach (var dropTarget in removedTargets)
+            {
+#if PCSOFT_DRAGDROP_LOGGING
+                Debug.Log("[DRAG-DROP] Move outside of target, exit");
+#endif
+                foreach (var key in _dragStartList.Keys)
+                {
+                    foreach (var info in _dragStartList[key])
                     {
-                        _currentDropTarget.OnDropExit();
-                        _currentDropTarget = null;
+                        dropTarget.OnDropExit(info.Data);
                     }
                 }
             }
+
+            //Call on entered targets callback method enter
+            foreach (var target in addedTargets)
+            {
+#if PCSOFT_DRAGDROP_LOGGING
+                Debug.Log("[DRAG-DROP] Move over target, entered");
+#endif
+                target.data.target.OnDropEnter(target.data.info.Data);
+            }
+
+            //Update drop targets
+            _currentDropTargets.RemoveAll(x => removedTargets.Contains(x));
+            _currentDropTargets.AddRange(addedTargets.Select(x => x.data.target));
         }
     }
 }

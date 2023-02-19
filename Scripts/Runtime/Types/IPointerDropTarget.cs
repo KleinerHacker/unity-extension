@@ -7,7 +7,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Types
         bool Accept(string dragDropName, Type type);
         void OnDrop(DragDropData data);
 
-        void OnDropEnter();
-        void OnDropExit();
+        void OnDropEnter(DragDropData data);
+        void OnDropExit(DragDropData data);
     }
 }

@@ -5,7 +5,7 @@
         bool Accept(string dragDropName);
 
         void OnStartDrag(out DragDropData data);
-        void OnDropCanceled();
-        void OnDropSuccessfully(IPointerDropTarget target);
+        void OnDropCanceled(DragDropData data);
+        void OnDropSuccessfully(IPointerDropTarget target, DragDropData data);
     }
 }

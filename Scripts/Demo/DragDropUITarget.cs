@@ -34,12 +34,12 @@ namespace UnityExtension.Demo.extension.Scripts.Demo
             _image.sprite = dropped;
         }
 
-        public void OnDropEnter()
+        public void OnDropEnter(DragDropData data)
         {
             _image.sprite = hover;
         }
 
-        public void OnDropExit()
+        public void OnDropExit(DragDropData data)
         {
             if (_image.sprite == dropped)
                 return;

@@ -23,9 +23,9 @@ namespace UnityExtension.Demo.extension.Scripts.Demo
             _renderer.material.color = Color.green;
         }
 
-        public void OnDropEnter() => _renderer.material.color = Color.yellow;
+        public void OnDropEnter(DragDropData data) => _renderer.material.color = Color.yellow;
 
-        public void OnDropExit()
+        public void OnDropExit(DragDropData data)
         {
             if (_renderer.material.color == Color.yellow)
             {

@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEditorEx.Runtime.editor_ex.Scripts.Runtime.Assets;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
 {
@@ -54,6 +55,9 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
         [SerializeField]
         private string raycasterMoveReference;
 
+        [SerializeField]
+        private DragDropHitType hitType = DragDropHitType.FirstTarget;
+
         #endregion
 
         #region Properties
@@ -68,6 +72,15 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
 
         public string RaycasterMoveReference => raycasterMoveReference;
 
+        public DragDropHitType HitType => hitType;
+
         #endregion
+    }
+
+    public enum DragDropHitType
+    {
+        FirstHit,
+        FirstTarget,
+        AllTargets
     }
 }
