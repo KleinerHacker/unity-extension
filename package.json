@@ -1,6 +1,6 @@
 {
   "name": "org.pcsoft.extension",
-  "version": "1.12.6",
+  "version": "1.12.7",
   "displayName": "Unity Extension",
   "description": "Extension for Unity itself.",
   "unity": "2021.3",
@@ -10,15 +10,15 @@
     "tooling"
   ],
   "dependencies": {
-    "org.pcsoft.base": "1.0.0",
-    "org.pcsoft.animation": "1.2.4",
+    "org.pcsoft.base": "1.0.1",
+    "org.pcsoft.animation": "1.2.7",
     "org.pcsoft.common-ex": "1.1.11",
     "org.pcsoft.editor-ex": "1.1.17",
     "org.pcsoft.android-ex": "1.0.1",
-    "com.unity.inputsystem": "1.4.0",
+    "com.unity.inputsystem": "1.5.0",
     "org.pcsoft.asset-loader": "2.0.1",
     "com.unity.editorcoroutines": "1.0.0",
-    "org.pcsoft.input-ex": "1.1.12"
+    "org.pcsoft.input-ex": "1.1.14"
   },
   "author": {
     "name": "Pfeiffer C Soft",
