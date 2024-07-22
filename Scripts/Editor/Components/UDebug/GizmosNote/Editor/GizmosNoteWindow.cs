@@ -2,13 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.EditorCoroutines.Editor;
-using UnityBase.Runtime.@base.Scripts.Runtime.Utils.Extensions;
-using UnityCommonEx.Runtime.common_ex.Scripts.Runtime.Utils.Extensions;
+using UnityBase.Runtime.Projects.unity_base.Scripts.Runtime.Utils.Extensions;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace UnityExtension.Editor.extension.Scripts.Editor.Components.UDebug.GizmosNote.Editor
+namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.Components.UDebug.GizmosNote.Editor
 {
     public sealed class GizmosNoteWindow : EditorWindow
     {
@@ -24,7 +23,7 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Components.UDebug.Gizmo
 
         #endregion
 
-        private readonly SortedDictionary<string, IList<Runtime.extension.Scripts.Runtime.Components.UDebug.GizmosNote.GizmosNote>> _notes = new SortedDictionary<string, IList<Runtime.extension.Scripts.Runtime.Components.UDebug.GizmosNote.GizmosNote>>(StringComparer.Ordinal);
+        private readonly SortedDictionary<string, IList<Runtime.Projects.unity_extension.Scripts.Runtime.Components.UDebug.GizmosNote.GizmosNote>> _notes = new SortedDictionary<string, IList<Runtime.Projects.unity_extension.Scripts.Runtime.Components.UDebug.GizmosNote.GizmosNote>>(StringComparer.Ordinal);
         private readonly IDictionary<string, bool> _foldouts = new Dictionary<string, bool>();
 
         #region Builtin Methods
@@ -88,11 +87,11 @@ namespace UnityExtension.Editor.extension.Scripts.Editor.Components.UDebug.Gizmo
                 var scene = SceneManager.GetSceneAt(i);
                 foreach (var rootGameObject in scene.GetRootGameObjects())
                 {
-                    foreach (var gizmosNote in rootGameObject.FindComponents<Runtime.extension.Scripts.Runtime.Components.UDebug.GizmosNote.GizmosNote>())
+                    foreach (var gizmosNote in rootGameObject.FindComponents<Runtime.Projects.unity_extension.Scripts.Runtime.Components.UDebug.GizmosNote.GizmosNote>())
                     {
                         if (!_notes.ContainsKey(gizmosNote.Category))
                         {
-                            _notes.Add(gizmosNote.Category, new List<Runtime.extension.Scripts.Runtime.Components.UDebug.GizmosNote.GizmosNote>());
+                            _notes.Add(gizmosNote.Category, new List<Runtime.Projects.unity_extension.Scripts.Runtime.Components.UDebug.GizmosNote.GizmosNote>());
                         }
 
                         _notes[gizmosNote.Category].Add(gizmosNote);

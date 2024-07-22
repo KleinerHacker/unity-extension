@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace UnityExtension.Runtime.extension.Scripts.Runtime
+﻿namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime
 {
     internal static class UnityExtensionConstants
     {

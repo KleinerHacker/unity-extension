@@ -1,9 +1,8 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Serialization;
-using UnityEngine.UI;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
+namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Assets
 {
     [Serializable]
     public sealed class EnvironmentTargetGroup

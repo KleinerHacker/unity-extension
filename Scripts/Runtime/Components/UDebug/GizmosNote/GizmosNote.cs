@@ -1,8 +1,8 @@
-﻿using UnityCommonEx.Runtime.common_ex.Scripts.Runtime.Utils;
+﻿using UnityBase.Runtime.Projects.unity_base.Scripts.Runtime.Utils;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.UDebug.GizmosNote
+namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Components.UDebug.GizmosNote
 {
     public abstract class GizmosNote : MonoBehaviour
     {

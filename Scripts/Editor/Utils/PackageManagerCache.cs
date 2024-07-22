@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace UnityExtension.Editor.extension.Scripts.Editor.Utils
+namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.Utils
 {
     internal static class PackageManagerCache
     {

@@ -3,7 +3,7 @@ using UnityEditor.Overlays;
 using UnityEditor.Toolbars;
 using UnityEngine;
 
-namespace UnityExtension.Editor.extension.Scripts.Editor.Overlays
+namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.Overlays
 {
     [Overlay(typeof(SceneView), "Screenshot")]
     public class ScreenshotOverlay : ToolbarOverlay

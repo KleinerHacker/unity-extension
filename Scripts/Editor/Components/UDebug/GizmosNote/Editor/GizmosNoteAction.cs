@@ -1,8 +1,8 @@
 ﻿using UnityEditor;
 using UnityEngine;
-using UnityExtension.Runtime.extension.Scripts.Runtime.Components.UDebug.GizmosNote;
+using UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Components.UDebug.GizmosNote;
 
-namespace UnityExtension.Editor.extension.Scripts.Editor.Components.UDebug.GizmosNote.Editor
+namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.Components.UDebug.GizmosNote.Editor
 {
     public static class GizmosNoteAction
     {

@@ -1,12 +1,12 @@
 ﻿using System.Linq;
-using UnityCommonEx.Runtime.common_ex.Scripts.Runtime.Utils.Extensions;
+using UnityBase.Runtime.Projects.unity_base.Scripts.Runtime.Utils.Extensions;
 using UnityEditor;
-using UnityEditorEx.Editor.editor_ex.Scripts.Editor;
-using UnityEditorEx.Editor.editor_ex.Scripts.Editor.Utils.Extensions;
+using UnityEditorEx.Editor.Projects.unity_editor_ex.Scripts.Editor;
+using UnityEditorEx.Editor.Projects.unity_editor_ex.Scripts.Editor.Utils.Extensions;
 using UnityEngine;
-using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
+using UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Assets;
 
-namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
+namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.Provider
 {
     public sealed class EnvironmentTargetGroupList : TableReorderableList
     {

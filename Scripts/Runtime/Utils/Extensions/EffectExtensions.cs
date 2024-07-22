@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
-using UnityAnimation.Runtime.animation.Scripts.Runtime.Utils;
+using UnityAnimation.Runtime.Projects.unity_animation.Scripts.Runtime.Utils;
 using UnityEngine;
 using UnityEngine.VFX;
-using UnityExtension.Runtime.extension.Scripts.Runtime.Types;
+using UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Types;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Utils.Extensions
+namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Utils.Extensions
 {
     public static class EffectExtensions
     {

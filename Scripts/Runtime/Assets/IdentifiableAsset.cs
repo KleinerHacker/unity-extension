@@ -1,8 +1,7 @@
-using System;
-using UnityEditorEx.Runtime.editor_ex.Scripts.Runtime.Extra;
+using UnityEditorEx.Runtime.Projects.unity_editor_ex.Scripts.Runtime.Extra;
 using UnityEngine;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
+namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Assets
 {
     public abstract class IdentifiableAsset : ScriptableObject
     {
@@ -32,7 +31,7 @@ namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
         {
             if (string.IsNullOrWhiteSpace(guid))
             {
-                guid = global::System.Guid.NewGuid().ToString();
+                guid = System.Guid.NewGuid().ToString();
             }
         }
 #endif

@@ -6,10 +6,10 @@ using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.UI;
 using UnityEngine.Networking;
 using UnityEngine.UIElements;
-using UnityExtension.Editor.extension.Scripts.Editor.Utils;
+using UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.Utils;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
-namespace UnityExtension.Editor.extension.Scripts.Editor.PackageManager
+namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.PackageManager
 {
     public sealed class ReadmePackageExtender : IPackageManagerExtension
     {

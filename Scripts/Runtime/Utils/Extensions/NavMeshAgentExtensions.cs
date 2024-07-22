@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Utils.Extensions
+namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Utils.Extensions
 {
     public static class NavMeshAgentExtensions
     {

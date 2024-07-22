@@ -1,10 +1,10 @@
 using UnityEditor;
-using UnityEditorEx.Editor.editor_ex.Scripts.Editor.Utils;
+using UnityEditorEx.Editor.Projects.unity_editor_ex.Scripts.Editor.Utils;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
+using UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Assets;
 
-namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
+namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.Provider
 {
     public sealed class EnvironmentDetectionProvider : SettingsProvider
     {

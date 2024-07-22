@@ -1,9 +1,9 @@
-using UnityBase.Runtime.@base.Scripts.Runtime.Components.Singleton;
-using UnityBase.Runtime.@base.Scripts.Runtime.Components.Singleton.Attributes;
+using UnityBase.Runtime.Projects.unity_base.Scripts.Runtime.Components.Singleton;
+using UnityBase.Runtime.Projects.unity_base.Scripts.Runtime.Components.Singleton.Attributes;
 using UnityEngine;
-using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
+using UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Assets;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.UDebug
+namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Components.UDebug
 {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
     [Singleton(Scope = SingletonScope.Application, Instance = SingletonInstance.RequiresNewInstance, CreationTime = SingletonCreationTime.Loading, ObjectName = "Debug Framerate")]

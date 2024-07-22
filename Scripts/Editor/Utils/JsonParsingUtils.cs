@@ -4,7 +4,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 
-namespace UnityExtension.Editor.extension.Scripts.Editor.Utils
+namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.Utils
 {
     internal static class JsonParsingUtils
     {

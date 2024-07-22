@@ -5,7 +5,7 @@ using UnityEditor.PackageManager.UI;
 using UnityEngine.UIElements;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
-namespace UnityExtension.Editor.extension.Scripts.Editor.PackageManager
+namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.PackageManager
 {
     public sealed class DependencyPackageExtender : IPackageManagerExtension
     {

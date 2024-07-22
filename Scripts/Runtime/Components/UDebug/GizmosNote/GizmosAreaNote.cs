@@ -1,9 +1,8 @@
-﻿
-using System;
+﻿using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components.UDebug.GizmosNote
+namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Components.UDebug.GizmosNote
 {
     [DisallowMultipleComponent]
     public sealed class GizmosAreaNote : GizmosNote

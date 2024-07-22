@@ -1,3 +1,7 @@
+using System.Linq;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Assets;
 #if !(UNITY_STANDALONE_WIN || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_OSX || STEAMWORKS_WIN || STEAMWORKS_LIN_OSX)
 #define DISABLESTEAMWORKS
 #endif
@@ -5,16 +9,11 @@
 #if PCSOFT_ENV_STEAM && STEAMWORKS_NET && !DISABLESTEAMWORKS
 using Steamworks;
 #endif
-using System;
-using System.Linq;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
 #if PLATFORM_ANDROID
 using UnityAndroidEx.Runtime.android_ex.Scripts.Runtime.Utils;
 #endif
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime
+namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime
 {
 #if PCSOFT_ENV
     public static class RuntimeEnvironment

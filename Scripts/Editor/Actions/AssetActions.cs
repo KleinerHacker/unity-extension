@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace UnityExtension.Editor.extension.Scripts.Editor.Actions
+namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.Actions
 {
     public static class AssetActions
     {

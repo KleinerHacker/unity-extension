@@ -6,7 +6,7 @@ using UnityEngine.Experimental.Rendering;
 using UnityEngine.Networking;
 using UnityEngine.UIElements;
 
-namespace UnityExtension.Editor.extension.Scripts.Editor.Utils
+namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.Utils
 {
     internal static class MarkupUtils
     {

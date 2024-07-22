@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
+namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.Provider
 {
     public sealed class PreviewList : ReorderableList
     {

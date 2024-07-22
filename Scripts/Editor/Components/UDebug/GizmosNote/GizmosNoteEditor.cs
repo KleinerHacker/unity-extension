@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UnityExtension.Editor.extension.Scripts.Editor.Components.UDebug.GizmosNote
+namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.Components.UDebug.GizmosNote
 {
     public abstract class GizmosNoteEditor : UnityEditor.Editor
     {

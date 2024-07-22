@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Types
+namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Types
 {
     [Serializable]
     public abstract class EffectItemBase

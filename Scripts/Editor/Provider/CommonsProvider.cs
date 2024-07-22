@@ -1,12 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
-using UnityCommonEx.Runtime.common_ex.Scripts.Runtime.Utils.Extensions;
 using UnityEditor;
-using UnityEditor.Build;
-using UnityEditorEx.Editor.editor_ex.Scripts.Editor.Utils;
+using UnityEditorEx.Editor.Projects.unity_editor_ex.Scripts.Editor.Utils;
 using UnityEngine;
 
-namespace UnityExtension.Editor.extension.Scripts.Editor.Provider
+namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.Provider
 {
     public sealed class CommonsProvider : SettingsProvider
     {

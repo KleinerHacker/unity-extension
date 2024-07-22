@@ -1,4 +1,4 @@
-namespace UnityExtension.Editor.extension.Scripts.Editor
+namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor
 {
     internal static class UnityExtensionEditorConstants
     {

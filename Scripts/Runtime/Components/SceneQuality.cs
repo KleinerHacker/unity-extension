@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
+namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Components
 {
     [AddComponentMenu(UnityExtensionConstants.Root + "/Scene Quality")]
     [DisallowMultipleComponent]

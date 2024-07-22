@@ -1,8 +1,8 @@
 using System;
-using UnityEditorEx.Runtime.editor_ex.Scripts.Runtime.Extra;
+using UnityEditorEx.Runtime.Projects.unity_editor_ex.Scripts.Runtime.Extra;
 using UnityEngine;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Types
+namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Types
 {
     [Serializable]
     public abstract class IdentifiableObject

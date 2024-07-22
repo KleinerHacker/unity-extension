@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
+namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Assets
 {
     [Serializable]
     public abstract class EnvironmentTarget

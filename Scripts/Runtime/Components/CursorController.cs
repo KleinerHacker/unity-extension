@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
-using UnityBase.Runtime.@base.Scripts.Runtime.Components.Singleton;
-using UnityBase.Runtime.@base.Scripts.Runtime.Components.Singleton.Attributes;
+using UnityBase.Runtime.Projects.unity_base.Scripts.Runtime.Components.Singleton;
+using UnityBase.Runtime.Projects.unity_base.Scripts.Runtime.Components.Singleton.Attributes;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityExtension.Runtime.extension.Scripts.Runtime.Assets;
+using UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Assets;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Components
+namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Components
 {
 #if PCSOFT_CURSOR
     [Singleton(Scope = SingletonScope.Application, Instance = SingletonInstance.RequiresNewInstance, CreationTime = SingletonCreationTime.Loading, ObjectName = "Cursor System")]

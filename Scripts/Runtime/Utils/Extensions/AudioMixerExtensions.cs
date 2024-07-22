@@ -1,7 +1,7 @@
-﻿using UnityCommonEx.Runtime.common_ex.Scripts.Runtime.Utils;
+﻿using UnityBase.Runtime.Projects.unity_base.Scripts.Runtime.Utils;
 using UnityEngine.Audio;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Utils.Extensions
+namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Utils.Extensions
 {
     public static class AudioMixerExtensions
     {

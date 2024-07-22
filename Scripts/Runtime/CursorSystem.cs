@@ -1,8 +1,8 @@
 #if PCSOFT_CURSOR
 using UnityEngine;
-using UnityExtension.Runtime.extension.Scripts.Runtime.Components;
+using UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Components;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime
+namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime
 {
     public static class CursorSystem
     {

@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Unity.EditorCoroutines.Editor;
-using UnityBase.Runtime.@base.Scripts.Runtime.Utils.Extensions;
+using UnityBase.Runtime.Projects.unity_base.Scripts.Runtime.Utils.Extensions;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
-namespace UnityExtension.Editor.extension.Scripts.Editor.Overlays
+namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.Overlays
 {
     public sealed class ScreenshotWindow : EditorWindow
     {

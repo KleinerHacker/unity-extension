@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
-using UnityCommonEx.Runtime.common_ex.Scripts.Runtime.Utils.Extensions;
+using UnityBase.Runtime.Projects.unity_base.Scripts.Runtime.Utils.Extensions;
 using UnityEditor;
-using UnityEditorEx.Runtime.editor_ex.Scripts.Runtime.Assets;
+using UnityEditorEx.Runtime.Projects.unity_editor_ex.Scripts.Runtime.Assets;
 using UnityEngine;
 
-namespace UnityExtension.Runtime.extension.Scripts.Runtime.Assets
+namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Assets
 {
     public sealed class EnvironmentDetectionSettings : ProviderAsset<EnvironmentDetectionSettings>
     {
