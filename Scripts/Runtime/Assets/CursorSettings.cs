@@ -20,48 +20,11 @@ namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Assets
         #region Inspector Data
 
         [SerializeField]
-        private UICursor uiCursor;
-
-        [SerializeField]
         private NamedCursorItem[] items;
 
         #endregion
 
         #region Properties
-
-        public UICursor UICursor => uiCursor;
-
-        public NamedCursorItem[] Items => items;
-
-        #endregion
-    }
-
-    [Serializable]
-    public sealed class UICursor
-    {
-        #region Inspector Data
-
-        [SerializeField]
-        private bool useUICursors;
-
-        [SerializeField]
-        private float uiCursorCheckDelay = 0.1f;
-        
-        [SerializeField]
-        private OptionalCursorItem defaultCursor;
-        
-        [SerializeField]
-        private NamedCursorItem[] items;
-
-        #endregion
-
-        #region Properties
-
-        public bool UseUICursors => useUICursors;
-
-        public float UICursorCheckDelay => uiCursorCheckDelay;
-
-        public OptionalCursorItem DefaultCursor => defaultCursor;
 
         public NamedCursorItem[] Items => items;
 

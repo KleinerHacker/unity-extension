@@ -21,10 +21,6 @@ namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime
         public static void ChangeCursor(string key) => CursorController.Singleton.ChangeCursor(key);
 
         public static void ResetCursor() => CursorController.Singleton.ResetCursor();
-
-        public static void ChangeUICursor(string key) => CursorController.Singleton.ChangeUICursor(key);
-
-        public static void ResetUICursor() => CursorController.Singleton.ResetUICursor();
     }
 }
 #endif
