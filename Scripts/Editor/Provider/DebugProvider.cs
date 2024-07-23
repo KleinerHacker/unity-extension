@@ -24,7 +24,7 @@ namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.Provider
         private SerializedProperty _frameratePositionProperty;
         private SerializedProperty _framerateUpdateRateProperty;
         
-        public DebugProvider() : base("Project/Player/Debug", SettingsScope.Project, new []{"Tooling", "Debug", "Development"})
+        public DebugProvider() : base("Project/Extensions/Debug", SettingsScope.Project, new []{"Tooling", "Debug", "Development"})
         {
         }
 
