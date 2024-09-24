@@ -1,9 +1,0 @@
-.unity-foldout Toggle Label {
-    font-size: 20px;
-    -unity-font-style: bold;
-    color: rgb(68, 138, 255);
-}
-
-.unity-foldout #unity-checkmark {
-    align-self: center;
-}
