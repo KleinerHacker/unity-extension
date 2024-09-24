@@ -13,20 +13,25 @@ namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.Componen
     public sealed class ObjectCursorEditor : ExtendedEditor
     {
         private SerializedProperty cursorProperty;
-        private string[] cursors;
+        private GUIContent[] cursors;
         
         private void OnEnable()
         {
             cursorProperty = serializedObject.FindProperty("cursorKey");
-            cursors = CursorSettings.Singleton.Items.Select(x => x.Identifier).ToArray();
+            cursors = CursorSettings.Singleton.Items.Select(x => new GUIContent(x.Identifier, x.Cursor)).ToArray();
         }
 
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-            
-            DrawCursorPopup();
-            
+
+            EditorGUILayout.BeginHorizontal();
+            {
+                EditorGUILayout.LabelField("Cursor:");
+                DrawCursorPopup();
+            }
+            EditorGUILayout.EndHorizontal();
+
             serializedObject.ApplyModifiedProperties();
         }
 
@@ -36,7 +41,7 @@ namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.Componen
             var newIndex = EditorGUILayout.Popup(index, cursors);
             if (newIndex != index)
             {
-                cursorProperty.stringValue = cursors[newIndex];
+                cursorProperty.stringValue = cursors[newIndex].text;
             }
         }
     }
