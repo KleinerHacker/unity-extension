@@ -1,8 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/extension/Scripts/Editor/ReadmePackageView.uss?fileID=7433441132597879392&amp;guid=27387885026595745b93f0ebb7a24cc3&amp;type=3#ReadmePackageView" />
-    <Style src="project://database/Assets/extension/Scripts/Editor/CommonPackageView.uss?fileID=7433441132597879392&amp;guid=6753f2c64e2cf0641b910de99177553a&amp;type=3#CommonPackageView" />
-    <ui:Foldout text="Readme" value="false">
-        <ui:Label text="Content" display-tooltip-when-elided="true" name="lblReadme" />
-        <ui:VisualElement name="pnlReadme" style="width: 100%; height: 100%; justify-content: flex-start;" />
-    </ui:Foldout>
-</ui:UXML>
