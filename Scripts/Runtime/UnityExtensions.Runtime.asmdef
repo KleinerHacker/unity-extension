@@ -1,0 +1,19 @@
+{
+    "name": "UnityExtensions.Runtime",
+    "rootNamespace": "UnityExtensions.Runtime",
+    "references": [
+        "GUID:64c52e74a682df04189ccbd30b6ca5aa",
+        "GUID:3d5224c516c856c4bb9a5993e6431b13",
+        "GUID:86c5ae22b787083498226e9faa99731d",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
