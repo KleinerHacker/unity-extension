@@ -1,13 +1,13 @@
-using System;
+#if PCSOFT_CURSOR
 using System.Linq;
 using UnityBase.Runtime.Projects.unity_base.Scripts.Runtime.Utils.Extensions;
 using UnityCommons.Runtime.Projects.unity_commons.Scripts.Runtime.Assets;
 using UnityEditor;
 using UnityEditorEx.Editor.Projects.unity_editor_ex.Scripts.Editor;
 using UnityEngine;
-using UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Components;
+using UnityExtensions.Runtime.Projects.unity_extensions.Scripts.Runtime.Components;
 
-namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.Components
+namespace UnityExtensions.Editor.Projects.unity_extensions.Scripts.Editor.Components
 {
     [CustomEditor(typeof(ObjectCursor))]
     public sealed class ObjectCursorEditor : ExtendedEditor
@@ -46,3 +46,4 @@ namespace UnityExtension.Editor.Projects.unity_extension.Scripts.Editor.Componen
         }
     }
 }
+#endif

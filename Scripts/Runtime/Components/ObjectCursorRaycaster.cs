@@ -1,15 +1,16 @@
+#if PCSOFT_CURSOR
 using UnityBase.Runtime.Projects.unity_base.Scripts.Runtime.Utils;
 using UnityCommons.Runtime.Projects.unity_commons.Scripts.Runtime;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Components
+namespace UnityExtensions.Runtime.Projects.unity_extensions.Scripts.Runtime.Components
 {
     /// <summary>
     /// Raycaster component for your scene camera to handle cursor update over objects.
     /// </summary>
-    [AddComponentMenu(UnityExtensionConstants.ROOT + "/Object Cursor Raycaster")]
+    [AddComponentMenu(UnityExtensionsConstants.ROOT + "/Object Cursor Raycaster")]
     [RequireComponent(typeof(Camera))]
     [DisallowMultipleComponent]
     public sealed class ObjectCursorRaycaster : MonoBehaviour
@@ -74,3 +75,4 @@ namespace UnityExtension.Runtime.Projects.unity_extension.Scripts.Runtime.Compon
         }
     }
 }
+#endif
